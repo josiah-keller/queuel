@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AdminModule } from './admin/admin.module';
+import { DisplayModule } from './display/display.module';
 
 import { AppComponent } from './app.component';
 
@@ -22,6 +23,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
 
     AdminModule,
+    DisplayModule,
   ],
   providers: [
   ],
