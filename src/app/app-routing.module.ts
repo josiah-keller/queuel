@@ -8,6 +8,7 @@ const routes : Routes = [
   {
     path: "admin",
     component: AdminComponent,
+    loadChildren: "app/admin/admin.module#AdminModule",
   },
   {
     path: "display",

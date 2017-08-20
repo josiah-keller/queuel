@@ -1,3 +1,13 @@
-<p>
-  topbar works!
-</p>
+<nav id="topbar">
+  <ul>
+    <li>
+      <a [routerLink]="['/admin', 'kiosk']">Kiosk</a>
+    </li>
+    <li>
+      <a [routerLink]="['/admin', 'event']">Event Staff</a>
+    </li>
+    <li>
+      <a [routerLink]="['/display']">Display</a>
+    </li>
+  </ul>
+</nav>
