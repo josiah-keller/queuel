@@ -2,8 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 
-import { LayoutModule } from './layout/layout.module';
+import { AppRoutingModule } from './app-routing.module';
+
+import { AdminModule } from './admin/admin.module';
 
 import { AppComponent } from './app.component';
 
@@ -16,9 +19,12 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpModule,
 
-    LayoutModule,
+    AppRoutingModule,
+
+    AdminModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

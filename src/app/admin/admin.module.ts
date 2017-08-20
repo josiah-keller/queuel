@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TopbarComponent } from './topbar/topbar.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   imports: [
@@ -8,9 +9,10 @@ import { TopbarComponent } from './topbar/topbar.component';
   ],
   declarations: [
     TopbarComponent,
+    AdminComponent,
   ],
   exports: [
-    TopbarComponent,
+    AdminComponent,
   ]
 })
-export class LayoutModule { }
+export class AdminModule { }
