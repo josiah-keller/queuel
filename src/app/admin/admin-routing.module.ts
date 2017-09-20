@@ -2,11 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { KioskComponent } from "./kiosk/kiosk.component";
+import { ConfigurationComponent } from "./configuration/configuration.component";
 
 const routes : Routes = [
   {
     path: "kiosk",
     component: KioskComponent,
+  },
+  {
+    path: "configuration",
+    component: ConfigurationComponent,
   },
   {
     path: "",
