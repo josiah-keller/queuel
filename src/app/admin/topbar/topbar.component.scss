@@ -1,0 +1,42 @@
+#topbar {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    left: 0px;
+    top: 0px;
+    background: #333333;
+    color: #ffffff;
+
+    #logo {
+        display: inline-block;
+        margin: 0px 20px;
+        font-size: 20px;
+        line-height: 50px;
+        vertical-align: middle;
+        cursor: default;
+    }
+    ul {
+        display: inline-block;
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+
+        li {
+            display: inline-block;
+            
+            a {
+                display: inline-block;
+                color: #ffffff;
+                text-decoration: none;
+                line-height: 50px;
+                vertical-align: middle;
+                padding: 0px 20px;
+                height: 50px;
+
+                &:hover {
+                    background: #444444;
+                }
+            }
+        }
+    }
+}
