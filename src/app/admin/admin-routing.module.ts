@@ -8,6 +8,11 @@ const routes : Routes = [
     path: "kiosk",
     component: KioskComponent,
   },
+  {
+    path: "",
+    pathMatch: "full",
+    redirectTo: "kiosk",
+  }
 ];
 
 @NgModule({

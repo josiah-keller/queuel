@@ -17,7 +17,7 @@ const routes : Routes = [
   {
     path: "",
     pathMatch: "full",
-    redirectTo: "/admin",
+    redirectTo: "admin",
   },
 ];
 
