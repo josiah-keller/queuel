@@ -8,6 +8,7 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { AdminComponent } from './admin/admin.component';
 import { KioskComponent } from './kiosk/kiosk.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
+import { PageContainerComponent } from './page-container/page-container.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
     AdminComponent,
     KioskComponent,
     ConfigurationComponent,
+    PageContainerComponent,
   ],
   exports: [
     AdminComponent,
