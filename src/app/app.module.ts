@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 
+import { RealtimeService } from './services/realtime.service';
+
 import { AdminModule } from './admin/admin.module';
 import { DisplayModule } from './display/display.module';
 
@@ -26,7 +28,8 @@ import { AppComponent } from './app.component';
     DisplayModule,
   ],
   providers: [
+    RealtimeService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
