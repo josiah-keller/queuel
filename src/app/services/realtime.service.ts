@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as SocketIoClient from 'socket.io-client';
 import * as SailsIoClient from 'sails.io.js';
@@ -34,7 +34,7 @@ export class RealtimeService {
     }
   }
 
-  constructor() {
+  constructor(private ngZone : NgZone) {
     this.apiUrl = environment.apiUrl;
     this.io = SailsIoClient(SocketIoClient);
     this.io.sails.url = this.apiUrl;
@@ -44,12 +44,16 @@ export class RealtimeService {
     if (this.queuesObservable) return this.queuesObservable;
     this.queuesObservable = new Observable(observer => {
       this.io.socket.on("queue", event => {
-        this.updateCollection(this.queues, event);
-        observer.next(this.queues);
+        this.ngZone.run(() => {
+          this.updateCollection(this.queues, event);
+          observer.next(this.queues);
+        });
       });
       this.io.socket.get("/queue", (queues, jwr) => {
-        this.queues = _.clone(queues);
-        observer.next(this.queues);
+        this.ngZone.run(() => {
+          this.queues = _.clone(queues);
+          observer.next(this.queues);
+        });
       });
     });
     return this.queuesObservable;
