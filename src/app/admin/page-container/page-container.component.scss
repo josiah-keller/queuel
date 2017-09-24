@@ -1,3 +1,9 @@
 #page-container {
-    margin-top: 60px;
+    margin: 0px;
+    margin-top: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100vw;
+    height: calc(100vh - 50px);
+    background: #eeeeee;
 }
