@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
@@ -7,11 +8,11 @@ import { RealtimeService } from '../../services/realtime.service';
   styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
+  private queues : Observable<any>;
 
   constructor(private realtimeService : RealtimeService) { }
 
   ngOnInit() {
-    this.realtimeService.getQueues().subscribe(() => {})
+    this.queues = this.realtimeService.getQueues();
   }
-
 }

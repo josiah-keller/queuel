@@ -1,3 +1,6 @@
 <app-page-container>
-  configuration works!
+  <h1>Queues</h1>
+  <ul class="queues-list">
+    <li *ngFor="let queue of queues | async">{{ queue.name }}</li>
+  </ul>
 </app-page-container>
