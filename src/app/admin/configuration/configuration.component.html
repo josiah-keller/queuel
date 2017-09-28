@@ -1,6 +1,15 @@
 <app-page-container>
-  <h1>Queues</h1>
+  <h1>Queues
+    <button (click)="startAdd()">Add</button>
+  </h1>
   <ul class="queues-list">
     <li *ngFor="let queue of queues | async">{{ queue.name }}</li>
+    <li *ngIf="adding">
+      <input type="text" class="textfield full-width" [(ngModel)]="newQueue.name">
+      <div class="buttons">
+        <button class="primary" (click)="finishAdd()">Save</button>
+        <button (click)="cancelAdd()">Cancel</button>
+      </div>
+    </li>
   </ul>
 </app-page-container>

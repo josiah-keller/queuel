@@ -58,4 +58,14 @@ export class RealtimeService {
     });
     return this.queuesObservable;
   }
+
+  addQueue(queue : any) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post("/queue", queue, (queue, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queue);
+        });
+      });
+    });
+  }
 }

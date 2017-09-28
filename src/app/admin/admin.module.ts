@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { AdminRoutingModule } from './admin-routing.module';
 
@@ -14,6 +15,7 @@ import { PageContainerComponent } from './page-container/page-container.componen
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
 
     AdminRoutingModule,
   ],
