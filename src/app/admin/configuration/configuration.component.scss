@@ -4,8 +4,9 @@
   padding: 0px;
 
   li {
-    display: inline-block;
+    float: left;
     width: 320px;
+    height: 140px;
     padding: 10px;
     margin-right: 10px;
     box-sizing: border-box;
