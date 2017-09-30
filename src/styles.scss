@@ -25,6 +25,9 @@ button {
   &.primary {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   }
+  &.delete-button {
+    box-shadow: 0px 0px 10px rgba(100, 0, 0, 0.75);
+  }
 }
 .buttons {
   margin: 10px 0px 0px 0px;

@@ -1,0 +1,16 @@
+<div class="outer-container">
+  <div class="delete-button-container"
+    [@deleteButton]="confirming ? 'out' : 'in'"
+    [hidden]="confirming">
+    <button class="delete-button" (click)="startDelete()">
+      <ng-content></ng-content>
+    </button>
+  </div>
+  <div class="delete-confirmation"
+    [@confirmation]="confirming ? 'in' : 'out'"
+    [hidden]="!confirming">
+    Are you sure?
+    <button class="primary" (click)="confirmDelete()">Yes</button>
+    <button (click)="cancelDelete()">No</button>
+  </div>
+</div>

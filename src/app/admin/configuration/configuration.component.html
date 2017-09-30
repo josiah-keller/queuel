@@ -3,7 +3,10 @@
     <button (click)="startAdd()">Add</button>
   </h1>
   <ul class="queues-list">
-    <li *ngFor="let queue of queues | async" [@queueBlock]="'in'">{{ queue.name }}</li>
+    <li *ngFor="let queue of queues | async" [@queueBlock]="'in'">
+      <h2>{{ queue.name }}</h2>
+      <app-delete-button>Delete</app-delete-button>
+    </li>
     <li *ngIf="adding">
       <input type="text" class="textfield full-width" [(ngModel)]="newQueue.name">
       <div class="buttons">

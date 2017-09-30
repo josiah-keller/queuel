@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 
 import { AdminRoutingModule } from './admin-routing.module';
 
+import { ControlsModule } from '../controls/controls.module';
+
 import { TopbarComponent } from './topbar/topbar.component';
 import { AdminComponent } from './admin/admin.component';
 import { KioskComponent } from './kiosk/kiosk.component';
@@ -18,6 +20,8 @@ import { PageContainerComponent } from './page-container/page-container.componen
     FormsModule,
 
     AdminRoutingModule,
+
+    ControlsModule,
   ],
   declarations: [
     TopbarComponent,

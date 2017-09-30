@@ -1,0 +1,9 @@
+.outer-container {
+  width: 100%;
+  overflow: hidden;
+  
+  .delete-button-container, .delete-confirmation {
+    text-align: right;
+    width: 100%;
+  }
+}

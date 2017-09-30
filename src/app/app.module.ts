@@ -11,6 +11,7 @@ import { RealtimeService } from './services/realtime.service';
 
 import { AdminModule } from './admin/admin.module';
 import { DisplayModule } from './display/display.module';
+import { ControlsModule } from './controls/controls.module';
 
 import { AppComponent } from './app.component';
 
@@ -28,6 +29,7 @@ import { AppComponent } from './app.component';
 
     AdminModule,
     DisplayModule,
+    ControlsModule,
   ],
   providers: [
     RealtimeService,
