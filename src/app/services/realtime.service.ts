@@ -11,6 +11,7 @@ export class RealtimeService {
   private apiUrl : string;
 
   private queuesObservable : Observable<any>;
+  private hasAttachedQueuesEvent : Boolean = false;
   private queues : Array<any>;
 
   private updateCollection(collection : Array<any>, event : any) {
@@ -43,12 +44,15 @@ export class RealtimeService {
   getQueues() : Observable<any> {
     if (this.queuesObservable) return this.queuesObservable;
     this.queuesObservable = new Observable(observer => {
-      this.io.socket.on("queue", event => {
-        this.ngZone.run(() => {
-          this.updateCollection(this.queues, event);
-          observer.next(this.queues);
+      if (! this.hasAttachedQueuesEvent) {
+        this.io.socket.on("queue", event => {
+          this.ngZone.run(() => {
+            this.updateCollection(this.queues, event);
+            observer.next(this.queues);
+          });
         });
-      });
+        this.hasAttachedQueuesEvent = true;
+      }
       this.io.socket.get("/queue", (queues, jwr) => {
         this.ngZone.run(() => {
           this.queues = _.clone(queues);
