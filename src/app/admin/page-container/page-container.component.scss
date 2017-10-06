@@ -3,7 +3,7 @@
     margin-top: 50px;
     padding: 10px;
     box-sizing: border-box;
-    width: 100vw;
-    height: calc(100vh - 50px);
+    width: 100%;
+    min-height: calc(100vh - 50px);
     background: #eeeeee;
 }
