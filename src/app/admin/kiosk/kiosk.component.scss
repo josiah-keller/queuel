@@ -1,0 +1,8 @@
+.queue-columns {
+  display: flex;
+  justify-content: space-between;
+
+  .queue-column {
+    flex: 1 1 0;
+  }
+}

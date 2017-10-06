@@ -7,7 +7,9 @@
       + {{ queue.name }}
     </button>
   </div>
-  <ng-container *ngFor="let queueId of shownQueueIds">
-    <app-queue-view [queue]="getQueueById(queueId)"></app-queue-view>
-  </ng-container>
+  <div class="queue-columns">
+    <div class="queue-column" *ngFor="let queueId of shownQueueIds">
+      <app-queue-view [queue]="getQueueById(queueId)"></app-queue-view>
+    </div>
+  </div>
 </app-page-container>
