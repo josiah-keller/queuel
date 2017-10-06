@@ -52,4 +52,8 @@ export class ConfigurationComponent implements OnInit {
   cancelAdd() {
     this.adding = false;
   }
+
+  deleteQueue(id : string) {
+    this.realtimeService.deleteQueue(id).toPromise();
+  }
 }

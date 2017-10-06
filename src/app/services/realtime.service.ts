@@ -19,19 +19,19 @@ export class RealtimeService {
       collection.push(event.data);
     }
     if (event.verb === "destroyed") {
-      _.remove(collection, item => item.id === event.id);
+      _.remove(collection, item => item.id == event.id);
     }
     if (event.verb === "updated") {
-      let index = _.findIndex(collection, item => item.id === event.id);
+      let index = _.findIndex(collection, item => item.id == event.id);
       collection[index] = event.data;
     }
     if (event.verb === "addedTo") {
-      let index = _.findIndex(collection, item => item.id === event.id);
+      let index = _.findIndex(collection, item => item.id == event.id);
       if (event.added) collection[index][event.attribute].push(event.added);
     }
     if (event.verb === "removedFrom") {
-      let index = _.findIndex(collection, item => item.id === event.id);
-      _.remove(collection[index][event.attribute], item => item.id === event.removedId);
+      let index = _.findIndex(collection, item => item.id == event.id);
+      _.remove(collection[index][event.attribute], item => item.id == event.removedId);
     }
   }
 
@@ -46,6 +46,7 @@ export class RealtimeService {
     this.queuesObservable = new Observable(observer => {
       if (! this.hasAttachedQueuesEvent) {
         this.io.socket.on("queue", event => {
+          console.log("EVENT", event);
           this.ngZone.run(() => {
             this.updateCollection(this.queues, event);
             observer.next(this.queues);
@@ -68,6 +69,16 @@ export class RealtimeService {
       this.io.socket.post("/queue", queue, (queue, jwr) => {
         this.ngZone.run(() => {
           observer.next(queue);
+        });
+      });
+    });
+  }
+
+  deleteQueue(id : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.delete("/queue/" + id, (queues, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queues);
         });
       });
     });
