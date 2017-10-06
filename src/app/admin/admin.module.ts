@@ -12,6 +12,7 @@ import { AdminComponent } from './admin/admin.component';
 import { KioskComponent } from './kiosk/kiosk.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { PageContainerComponent } from './page-container/page-container.component';
+import { QueueViewComponent } from './queue-view/queue-view.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { PageContainerComponent } from './page-container/page-container.componen
     KioskComponent,
     ConfigurationComponent,
     PageContainerComponent,
+    QueueViewComponent,
   ],
   exports: [
     AdminComponent,
