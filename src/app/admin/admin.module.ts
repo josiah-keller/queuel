@@ -13,6 +13,7 @@ import { KioskComponent } from './kiosk/kiosk.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { PageContainerComponent } from './page-container/page-container.component';
 import { QueueViewComponent } from './queue-view/queue-view.component';
+import { QueueStatusComponent } from './queue-status/queue-status.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { QueueViewComponent } from './queue-view/queue-view.component';
     ConfigurationComponent,
     PageContainerComponent,
     QueueViewComponent,
+    QueueStatusComponent,
   ],
   exports: [
     AdminComponent,

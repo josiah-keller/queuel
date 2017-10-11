@@ -1,0 +1,14 @@
+<div class="queue-status">
+  <div *ngIf="status == 'open'" class="status-open">
+    <app-icon name="icon_check_alt2"></app-icon>
+    Open
+  </div>
+  <div *ngIf="status == 'blocked'" class="status-closed">
+    <app-icon name="icon_blocked"></app-icon>
+    Blocked
+  </div>
+  <div *ngIf="status == 'inProgress'" class="status-inprogress">
+    <app-icon name="icon_hourglass"></app-icon>
+    In Progress
+  </div>
+</div>
