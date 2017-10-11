@@ -26,6 +26,10 @@ export class KioskComponent implements OnInit {
     this.shownQueueIds = _.uniq(this.shownQueueIds);
   }
 
+  hideQueue(id : string) {
+    _.pull(this.shownQueueIds, id);
+  }
+
   getQueueById(id : string) {
     return _.find(this.queues, queue => queue.id == id);
   }

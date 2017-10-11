@@ -9,7 +9,9 @@
   </div>
   <div class="queue-columns">
     <div class="queue-column" *ngFor="let queueId of shownQueueIds">
-      <app-queue-view [queue]="getQueueById(queueId)"></app-queue-view>
+      <app-queue-view
+        [queue]="getQueueById(queueId)"
+        (onHideRequested)="hideQueue(queueId)"></app-queue-view>
     </div>
   </div>
 </app-page-container>
