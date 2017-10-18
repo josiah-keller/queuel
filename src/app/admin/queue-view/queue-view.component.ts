@@ -8,6 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class QueueViewComponent implements OnInit {
   @Input() queue : any;
   @Output() onHideRequested : EventEmitter<any> = new EventEmitter<any>();
+  private editingGroup : any = null;
 
   constructor() { }
 

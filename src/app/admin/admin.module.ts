@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DndModule } from 'ng2-dnd';
 
 import { AdminRoutingModule } from './admin-routing.module';
 
@@ -14,12 +15,14 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 import { PageContainerComponent } from './page-container/page-container.component';
 import { QueueViewComponent } from './queue-view/queue-view.component';
 import { QueueStatusComponent } from './queue-status/queue-status.component';
+import { GroupEditorComponent } from './group-editor/group-editor.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    DndModule.forRoot(),
 
     AdminRoutingModule,
 
@@ -33,6 +36,7 @@ import { QueueStatusComponent } from './queue-status/queue-status.component';
     PageContainerComponent,
     QueueViewComponent,
     QueueStatusComponent,
+    GroupEditorComponent,
   ],
   exports: [
     AdminComponent,

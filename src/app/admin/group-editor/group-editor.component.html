@@ -1,0 +1,44 @@
+<div class="group-editor-container">
+  <div class="group-editor-modal">
+    <h2>{{ isNew ? "Create" : "Edit"}} Group</h2>
+    <label class="form-control">Name
+      <input type="text" class="textfield full-width">
+    </label>
+    <label class="form-control">Phone Number
+      <input type="tel" class="textfield full-width">
+    </label>
+    <label class="form-control">Number of people
+      <input type="number" min="1" max="15" class="textfield">
+    </label>
+    <h3>Events Order</h3>
+    <div class="group-events-bank"
+      dnd-sortable-container
+      [dropZones]="['events-zone']"
+      [sortableData]="queuesBank">
+      <span>Available events</span>
+      <div *ngFor="let queue of queuesBank; let i = index"
+        class="group-event"
+        dnd-sortable
+        [sortableIndex]="i">
+        
+        {{ queue.name }}
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="group-events-selection"
+      dnd-sortable-container
+      [dropZones]="['events-zone']"
+      [sortableData]="selectedQueues">
+
+      <span>Selected events</span>
+      <div *ngFor="let queue of selectedQueues; let i = index"
+        class="group-event"
+        dnd-sortable
+        [sortableIndex]="i">
+        
+        {{ queue.name }}
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
