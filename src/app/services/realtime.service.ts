@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import * as SocketIoClient from 'socket.io-client';
 import * as SailsIoClient from 'sails.io.js';
 import * as _ from 'lodash';
@@ -13,6 +13,7 @@ export class RealtimeService {
   private queuesObservable : Observable<any>;
   private hasAttachedQueuesEvent : Boolean = false;
   private queues : Array<any>;
+  private observers : Array<Observer<any>> = [];
 
   private updateCollection(collection : Array<any>, event : any) {
     if (event.verb === "created") {
@@ -35,6 +36,10 @@ export class RealtimeService {
     }
   }
 
+  private updateObservers(queues : Array<any>) {
+    this.observers.forEach(observer => observer.next(queues));
+  }
+
   constructor(private ngZone : NgZone) {
     this.apiUrl = environment.apiUrl;
     this.io = SailsIoClient(SocketIoClient);
@@ -44,12 +49,13 @@ export class RealtimeService {
   getQueues() : Observable<any> {
     if (this.queuesObservable) return this.queuesObservable;
     this.queuesObservable = new Observable(observer => {
+      this.observers.push(observer);
       if (! this.hasAttachedQueuesEvent) {
         this.io.socket.on("queue", event => {
           console.log("EVENT", event);
           this.ngZone.run(() => {
             this.updateCollection(this.queues, event);
-            observer.next(this.queues);
+            this.updateObservers(this.queues);
           });
         });
         this.hasAttachedQueuesEvent = true;
@@ -57,7 +63,7 @@ export class RealtimeService {
       this.io.socket.get("/queue", (queues, jwr) => {
         this.ngZone.run(() => {
           this.queues = _.clone(queues);
-          observer.next(this.queues);
+          this.updateObservers(this.queues);
         });
       });
     });
