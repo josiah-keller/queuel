@@ -10,39 +10,46 @@
     <label class="form-control">Number of people
       <input type="number" min="1" max="15" class="textfield" [(ngModel)]="newGroup.groupSize">
     </label>
-    <h3>Events Order</h3>
-    <div class="group-events-bank"
-      dnd-sortable-container
-      [dropZones]="['events-zone']"
-      [sortableData]="queuesBank">
-      <span>Available events</span>
-      <div *ngFor="let queue of queuesBank; let i = index"
-        class="group-event"
-        dnd-sortable
-        [sortableIndex]="i">
-        
-        {{ queue.name }}
+    <ng-container *ngIf="isNew">
+      <h3>Events Order</h3>
+      <div class="group-events-bank"
+        dnd-sortable-container
+        [dropZones]="['events-zone']"
+        [sortableData]="queuesBank">
+        <span>Available events</span>
+        <div *ngFor="let queue of queuesBank; let i = index"
+          class="group-event"
+          dnd-sortable
+          [sortableIndex]="i">
+          
+          {{ queue.name }}
+        </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
-    </div>
-    <div class="group-events-selection"
-      dnd-sortable-container
-      [dropZones]="['events-zone']"
-      [sortableData]="selectedQueues">
+      <div class="group-events-selection"
+        dnd-sortable-container
+        [dropZones]="['events-zone']"
+        [sortableData]="selectedQueues">
 
-      <span>Selected events</span>
-      <div *ngFor="let queue of selectedQueues; let i = index"
-        class="group-event"
-        dnd-sortable
-        [sortableIndex]="i">
-        
-        {{ queue.name }}
+        <span>Selected events</span>
+        <div *ngFor="let queue of selectedQueues; let i = index"
+          class="group-event"
+          dnd-sortable
+          [sortableIndex]="i">
+          
+          {{ queue.name }}
+        </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
-    </div>
-    <div [hidden]="! noSelectedQueues">
-      Please choose at least one event for this group
-    </div>
+      <div [hidden]="! noSelectedQueues">
+        Please choose at least one event for this group
+      </div>
+    </ng-container>
+    <ng-container *ngIf="! isNew">
+      <p>You can't change a group's events order after the fact.</p>
+      <p>Click "Delete Group" below to delete this group from <i>all</i> queues</p>
+      <app-delete-button (onConfirm)="delete()">Delete Group</app-delete-button>
+    </ng-container> 
     <div class="buttons">
       <button class="primary" (click)="save()">{{ isNew ? "Create" : "Save"}}</button>
       <button (click)="cancel()">Cancel</button>

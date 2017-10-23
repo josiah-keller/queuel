@@ -57,7 +57,6 @@ export class RealtimeService {
       this.queueObservers.push(observer);
       if (! this.hasAttachedQueuesEvent) {
         this.io.socket.on("queue", event => {
-          console.log("QUEUE EVENT", event);
           this.ngZone.run(() => {
             this.updateCollection(this.queues, event);
             this.updateObservers(this.queueObservers, this.queues);
@@ -104,7 +103,7 @@ export class RealtimeService {
       this.groupObservers[queueId].push(observer);
       if (! this.hasAttachedGroupsEvent[queueId]) {
         this.io.socket.on("queuegroup", event => {
-          if (event.data.queue != queueId) return; // Ignore other queues
+          if (event.data && event.data.queue != queueId) return; // Ignore other queues
           this.ngZone.run(() => {
             this.updateCollection(this.groups[queueId], event);
             this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
@@ -127,6 +126,16 @@ export class RealtimeService {
       this.io.socket.post("/group", group, (group, jwr) => {
         this.ngZone.run(() => {
           observer.next(group);
+        });
+      });
+    });
+  }
+
+  deleteGroup(id : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.delete("/group/" + id, (groups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(groups);
         });
       });
     });

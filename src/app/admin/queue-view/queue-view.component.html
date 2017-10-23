@@ -11,12 +11,18 @@
   </h3>
 
   <div class="queue-groups-list">
-    <ng-container *ngFor="let queueGroup of groups | async; let i = index">
+    <ng-container *ngFor="let queueGroup of groups; let i = index">
       <div class="queue-groups-list-item" [ngClass]="{ 'current-group': i === 0 }">
         <h4 *ngIf="i === 0">Current Group</h4>
         <h4 *ngIf="i === 1">Next Group</h4>
         {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
         {{ queueGroup.group.groupSize | i18nPlural : peopleMapping}}
+
+        <div class="queue-groups-list-item-actions">
+          <button (click)="startEdit(i)">
+            <app-icon name="icon_pencil-edit"></app-icon>
+          </button>
+        </div>
       </div>
     </ng-container>
   </div>

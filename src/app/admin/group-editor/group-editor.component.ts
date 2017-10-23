@@ -52,6 +52,11 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
     this.onFinish.emit(null);
   }
 
+  delete() {
+    this.realtimeService.deleteGroup(this.group.id).toPromise();
+    this.onFinish.emit(null);
+  }
+
   cancel() {
     this.onFinish.emit(null);
   }

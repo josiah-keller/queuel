@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
@@ -7,12 +7,13 @@ import { RealtimeService } from '../../services/realtime.service';
   templateUrl: './queue-view.component.html',
   styleUrls: ['./queue-view.component.scss']
 })
-export class QueueViewComponent implements OnInit {
+export class QueueViewComponent implements OnInit, OnDestroy {
   @Input() queue : any;
   @Output() onHideRequested : EventEmitter<any> = new EventEmitter<any>();
   private editingGroup : any = null;
   private isEditing : any = false;
-  private groups : Observable<any>;
+  private groups : Array<any>;
+  private subscription : Subscription;
   private peopleMapping : {[k: string]: string} = {
     '=0': 'No people', '=1': 'One person', 'other': '# people'
   };
@@ -20,7 +21,13 @@ export class QueueViewComponent implements OnInit {
   constructor(private realtimeService : RealtimeService) { }
 
   ngOnInit() {
-    this.groups = this.realtimeService.getGroupsByQueue(this.queue.id);
+    this.subscription = this.realtimeService.getGroupsByQueue(this.queue.id).subscribe(groups => {
+      this.groups = groups;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   hideQueueView() {
@@ -28,6 +35,12 @@ export class QueueViewComponent implements OnInit {
   }
 
   addGroup() {
+    this.editingGroup = null;
+    this.isEditing = true;
+  }
+
+  startEdit(index : number) {
+    this.editingGroup = this.groups[index].group;
     this.isEditing = true;
   }
 
