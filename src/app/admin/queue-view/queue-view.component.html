@@ -19,10 +19,11 @@
         {{ queueGroup.group.groupSize | i18nPlural : peopleMapping}}
 
         <div class="queue-groups-list-item-actions">
-          <button (click)="startEdit(i)">
+          <button (click)="startEdit(i)" title="Edit">
             <app-icon name="icon_pencil-edit"></app-icon>
           </button>
         </div>
+        <div class="clear"></div>
       </div>
     </ng-container>
   </div>

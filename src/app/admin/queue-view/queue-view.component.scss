@@ -64,6 +64,19 @@
         color: #333333;
         margin: 0px;
       }
+
+      .queue-groups-list-item-actions {
+        float: right;
+
+        button {
+          background: #ffffff;
+          cursor: pointer;
+
+          &:hover {
+            background: #cccccc;
+          }
+        }
+      }
     }
   }
 }
