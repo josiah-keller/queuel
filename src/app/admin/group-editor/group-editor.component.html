@@ -40,5 +40,12 @@
       </div>
       <div class="clear"></div>
     </div>
+    <div [hidden]="! noSelectedQueues">
+      Please choose at least one event for this group
+    </div>
+    <div class="buttons">
+      <button class="primary" (click)="save()">{{ isNew ? "Create" : "Save"}}</button>
+      <button (click)="cancel()">Cancel</button>
+    </div>
   </div>
 </div>
