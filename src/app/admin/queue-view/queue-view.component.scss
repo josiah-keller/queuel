@@ -45,4 +45,25 @@
       }
     }
   }
+
+  .queue-groups-list {
+    border: 1px solid #cccccc;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .queue-groups-list-item {
+      &:not(:first-of-type) {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #cccccc;
+      }
+
+      h4 {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #333333;
+        margin: 0px;
+      }
+    }
+  }
 }

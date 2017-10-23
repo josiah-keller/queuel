@@ -13,6 +13,9 @@ export class QueueViewComponent implements OnInit {
   private editingGroup : any = null;
   private isEditing : any = false;
   private groups : Observable<any>;
+  private peopleMapping : {[k: string]: string} = {
+    '=0': 'No people', '=1': 'One person', 'other': '# people'
+  };
 
   constructor(private realtimeService : RealtimeService) { }
 
