@@ -6,6 +6,19 @@
 
   <app-queue-status [status]="queue.status"></app-queue-status>
 
-  <h3>{{ queue.groups.length }} Groups</h3>
+  <h3>{{ queue.groups.length }} Groups
+    <button (click)="addGroup()">Add</button>
+  </h3>
+
+  <div class="queue-groups-list">
+    <ng-container *ngFor="let queueGroup of groups | async">
+      <div>
+        {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }}
+      </div>
+    </ng-container>
+  </div>
 </div>
-<app-group-editor [group]="editingGroup"></app-group-editor>
+<app-group-editor
+  *ngIf="isEditing"
+  [group]="editingGroup"
+  (onFinish)="finishEdit()"></app-group-editor>

@@ -13,7 +13,12 @@ export class RealtimeService {
   private queuesObservable : Observable<any>;
   private hasAttachedQueuesEvent : Boolean = false;
   private queues : Array<any>;
-  private observers : Array<Observer<any>> = [];
+  private queueObservers : Array<Observer<any>> = [];
+
+  private groupsObservables : Object = {};
+  private hasAttachedGroupsEvent : Object = {};
+  private groups : Object = {};
+  private groupObservers : Object = {};
 
   private updateCollection(collection : Array<any>, event : any) {
     if (event.verb === "created") {
@@ -36,8 +41,8 @@ export class RealtimeService {
     }
   }
 
-  private updateObservers(queues : Array<any>) {
-    this.observers.forEach(observer => observer.next(queues));
+  private updateObservers(observers : Array<Observer<any>>, value : Array<any>) {
+    observers.forEach(observer => observer.next(value));
   }
 
   constructor(private ngZone : NgZone) {
@@ -49,13 +54,13 @@ export class RealtimeService {
   getQueues() : Observable<any> {
     if (this.queuesObservable) return this.queuesObservable;
     this.queuesObservable = new Observable(observer => {
-      this.observers.push(observer);
+      this.queueObservers.push(observer);
       if (! this.hasAttachedQueuesEvent) {
         this.io.socket.on("queue", event => {
-          console.log("EVENT", event);
+          console.log("QUEUE EVENT", event);
           this.ngZone.run(() => {
             this.updateCollection(this.queues, event);
-            this.updateObservers(this.queues);
+            this.updateObservers(this.queueObservers, this.queues);
           });
         });
         this.hasAttachedQueuesEvent = true;
@@ -63,7 +68,7 @@ export class RealtimeService {
       this.io.socket.get("/queue", (queues, jwr) => {
         this.ngZone.run(() => {
           this.queues = _.clone(queues);
-          this.updateObservers(this.queues);
+          this.updateObservers(this.queueObservers, this.queues);
         });
       });
     });
@@ -85,6 +90,43 @@ export class RealtimeService {
       this.io.socket.delete("/queue/" + id, (queues, jwr) => {
         this.ngZone.run(() => {
           observer.next(queues);
+        });
+      });
+    });
+  }
+
+  getGroupsByQueue(queueId : string) : Observable<any> {
+    if (this.groupsObservables[queueId]) return this.groupsObservables[queueId];
+    this.groupsObservables[queueId] = new Observable(observer => {
+      if (! this.groupObservers[queueId]) this.groupObservers[queueId] = [];
+      if (! this.groups[queueId]) this.groups[queueId] = [];
+
+      this.groupObservers[queueId].push(observer);
+      if (! this.hasAttachedGroupsEvent[queueId]) {
+        this.io.socket.on("queuegroup", event => {
+          if (event.data.queue != queueId) return; // Ignore other queues
+          this.ngZone.run(() => {
+            this.updateCollection(this.groups[queueId], event);
+            this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
+          });
+        });
+        this.hasAttachedGroupsEvent[queueId] = true;
+      }
+      this.io.socket.get(`/queue/${queueId}/group`, (groups, jwr) => {
+        this.ngZone.run(() => {
+          this.groups[queueId] = _.clone(groups);
+          this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
+        });
+      });
+    });
+    return this.groupsObservables[queueId];
+  }
+
+  addGroup(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post("/group", group, (group, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(group);
         });
       });
     });

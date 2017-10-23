@@ -17,6 +17,7 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   private selectedQueues : Array<any> = [];
   private subscription : Subscription;
   private noSelectedQueues : boolean = false;
+  private newGroup : any = {};
 
   constructor(private realtimeService : RealtimeService) { }
 
@@ -32,6 +33,7 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.queuesBank = _.clone(this.queues);
     }
     this.selectedQueues = [];
+    this.newGroup = this.group ? _.clone(this.group) : {};
   }
 
   ngOnDestroy() {
@@ -43,6 +45,11 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.noSelectedQueues = true;
       return;
     }
+    if (this.isNew) {
+      this.newGroup.queueOrder = _.map(this.selectedQueues, "id");
+    }
+    this.realtimeService.addGroup(this.newGroup).toPromise();
+    this.onFinish.emit(null);
   }
 
   cancel() {

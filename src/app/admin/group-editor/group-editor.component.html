@@ -2,13 +2,13 @@
   <div class="group-editor-modal">
     <h2>{{ isNew ? "Create" : "Edit"}} Group</h2>
     <label class="form-control">Name
-      <input type="text" class="textfield full-width">
+      <input type="text" class="textfield full-width" [(ngModel)]="newGroup.name">
     </label>
     <label class="form-control">Phone Number
-      <input type="tel" class="textfield full-width">
+      <input type="tel" class="textfield full-width" [(ngModel)]="newGroup.phoneNumber">
     </label>
     <label class="form-control">Number of people
-      <input type="number" min="1" max="15" class="textfield">
+      <input type="number" min="1" max="15" class="textfield" [(ngModel)]="newGroup.groupSize">
     </label>
     <h3>Events Order</h3>
     <div class="group-events-bank"

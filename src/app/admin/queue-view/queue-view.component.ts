@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
   selector: 'app-queue-view',
@@ -9,14 +11,24 @@ export class QueueViewComponent implements OnInit {
   @Input() queue : any;
   @Output() onHideRequested : EventEmitter<any> = new EventEmitter<any>();
   private editingGroup : any = null;
+  private isEditing : any = false;
+  private groups : Observable<any>;
 
-  constructor() { }
+  constructor(private realtimeService : RealtimeService) { }
 
   ngOnInit() {
+    this.groups = this.realtimeService.getGroupsByQueue(this.queue.id);
   }
 
   hideQueueView() {
     this.onHideRequested.emit();
   }
 
+  addGroup() {
+    this.isEditing = true;
+  }
+
+  finishEdit() {
+    this.isEditing = false;
+  }
 }
