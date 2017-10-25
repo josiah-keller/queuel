@@ -29,7 +29,7 @@ export class RealtimeService {
     }
     if (event.verb === "updated") {
       let index = _.findIndex(collection, item => item.id == event.id);
-      collection[index] = event.data;
+      _.assign(collection[index], event.data);
     }
     if (event.verb === "addedTo") {
       let index = _.findIndex(collection, item => item.id == event.id);
@@ -103,12 +103,23 @@ export class RealtimeService {
       this.groupObservers[queueId].push(observer);
       if (! this.hasAttachedGroupsEvent[queueId]) {
         this.io.socket.on("queuegroup", event => {
+          console.log("QUEUEGROUP EVENT", event);
           if (event.data && event.data.queue != queueId) return; // Ignore other queues
           this.ngZone.run(() => {
             this.updateCollection(this.groups[queueId], event);
             this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
           });
         });
+        this.io.socket.on("group", event => {
+          console.log("GROUP EVENT", event);
+          // Only interested in update events; others covered by queueGroup events
+          if (event.verb === "updated") {
+            this.ngZone.run(() => {
+              this.updateCollection(_.map(this.groups[queueId], "group"), event);
+              this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
+            });
+          }
+        })
         this.hasAttachedGroupsEvent[queueId] = true;
       }
       this.io.socket.get(`/queue/${queueId}/group`, (groups, jwr) => {
@@ -134,6 +145,16 @@ export class RealtimeService {
   deleteGroup(id : string) : Observable<any> {
     return new Observable(observer => {
       this.io.socket.delete("/group/" + id, (groups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(groups);
+        });
+      });
+    });
+  }
+
+  updateGroup(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/group/${group.id}`, group, (groups, jwr) => {
         this.ngZone.run(() => {
           observer.next(groups);
         });

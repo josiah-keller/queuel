@@ -41,14 +41,16 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   save() {
-    if (this.selectedQueues.length === 0) {
-      this.noSelectedQueues = true;
-      return;
-    }
     if (this.isNew) {
+      if (this.selectedQueues.length === 0) {
+        this.noSelectedQueues = true;
+        return;
+      }
       this.newGroup.queueOrder = _.map(this.selectedQueues, "id");
+      this.realtimeService.addGroup(this.newGroup).toPromise();
+    } else {
+      this.realtimeService.updateGroup(this.newGroup).toPromise();
     }
-    this.realtimeService.addGroup(this.newGroup).toPromise();
     this.onFinish.emit(null);
   }
 
