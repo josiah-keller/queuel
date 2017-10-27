@@ -21,12 +21,24 @@ button {
   &:hover {
     background: #444444;
   }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
 
   &.primary {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   }
   &.delete-button {
     box-shadow: 0px 0px 10px rgba(100, 0, 0, 0.75);
+  }
+  &.green-button {
+    background: #006400;
+    box-shadow: 0px 0px 10px rgba(0, 100, 0, 0.75);
+
+    &:hover {
+      background: #007500;
+    }
   }
 }
 .buttons {

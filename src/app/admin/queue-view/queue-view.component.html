@@ -5,6 +5,18 @@
   </div>
 
   <app-queue-status [status]="queue.status"></app-queue-status>
+  <div class="queue-control-buttons">
+    <button class="green-button" [disabled]="queue.status !== 'open'">
+      <app-icon name="icon_group"></app-icon>
+      Next
+    </button>
+    <button (click)="advanceQueue()" title="Shift queue up">
+      <app-icon name="arrow_carrot-2up_alt2"></app-icon>
+    </button>
+    <button (click)="reverseQueue()" title="Shift queue down">
+      <app-icon name="arrow_carrot-2down_alt2"></app-icon>
+    </button>
+  </div>
 
   <h3>{{ queue.groups.length }} Groups
     <button (click)="addGroup()">Add</button>
@@ -23,7 +35,7 @@
         <h4 *ngIf="i === 0">Current Group</h4>
         <h4 *ngIf="i === 1">Next Group</h4>
         {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
-        {{ queueGroup.group.groupSize | i18nPlural : peopleMapping}}
+        {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
 
         <div class="queue-groups-list-item-actions">
           <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">

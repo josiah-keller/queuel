@@ -172,4 +172,28 @@ export class RealtimeService {
       });
     });
   }
+
+  advanceQueue(queueId : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/queue/${queueId}/advance`, {
+        queueId,
+      }, (group, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(group);
+        });
+      });
+    });
+  }
+
+  reverseQueue(queueId : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/queue/${queueId}/reverse`, {
+        queueId,
+      }, (group, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(group);
+        });
+      });
+    });
+  }
 }

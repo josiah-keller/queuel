@@ -14,6 +14,7 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   private editingGroup : any = null;
   private isEditing : any = false;
   private groups : Array<any>;
+  private completedOffset : number;
   private subscription : Subscription;
   private peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
@@ -23,7 +24,8 @@ export class QueueViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.realtimeService.getGroupsByQueue(this.queue.id).subscribe(groups => {
-      this.groups = _.sortBy(groups, group => group.position);
+      this.groups = _.chain(groups).filter(group => !group.completed).sortBy(group => group.position).value();
+      this.completedOffset = groups.length - this.groups.length;
     });
   }
 
@@ -50,6 +52,15 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   }
 
   finishReorder(newIndex : number, queueGroup : any) {
+    newIndex += this.completedOffset;
     this.realtimeService.reorderGroup(newIndex, this.queue.id, queueGroup.id).toPromise();
+  }
+
+  advanceQueue() {
+    this.realtimeService.advanceQueue(this.queue.id).toPromise();
+  }
+
+  reverseQueue() {
+    this.realtimeService.reverseQueue(this.queue.id).toPromise();
   }
 }
