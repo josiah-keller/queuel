@@ -103,7 +103,6 @@ export class RealtimeService {
       this.groupObservers[queueId].push(observer);
       if (! this.hasAttachedGroupsEvent[queueId]) {
         this.io.socket.on("queuegroup", event => {
-          console.log("QUEUEGROUP EVENT", event);
           if (event.data && event.data.queue != queueId) return; // Ignore other queues
           this.ngZone.run(() => {
             this.updateCollection(this.groups[queueId], event);
@@ -111,7 +110,6 @@ export class RealtimeService {
           });
         });
         this.io.socket.on("group", event => {
-          console.log("GROUP EVENT", event);
           // Only interested in update events; others covered by queueGroup events
           if (event.verb === "updated") {
             this.ngZone.run(() => {
@@ -157,6 +155,19 @@ export class RealtimeService {
       this.io.socket.post(`/group/${group.id}`, group, (groups, jwr) => {
         this.ngZone.run(() => {
           observer.next(groups);
+        });
+      });
+    });
+  }
+
+  reorderGroup(index : number, queueId : string, queueGroupId : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/queue/${queueId}/reorder`, {
+        queueGroupId,
+        index,
+      }, (group, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(group);
         });
       });
     });

@@ -52,6 +52,8 @@
     box-sizing: border-box;
 
     .queue-groups-list-item {
+      cursor: default !important;
+
       &:not(:first-of-type) {
         margin-top: 10px;
         padding-top: 10px;
@@ -67,6 +69,10 @@
 
       .queue-groups-list-item-actions {
         float: right;
+
+        .sort-handle {
+          display: inline;
+        }
 
         button {
           background: #ffffff;

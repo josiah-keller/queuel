@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
@@ -15,14 +16,14 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   private groups : Array<any>;
   private subscription : Subscription;
   private peopleMapping : {[k: string]: string} = {
-    '=0': 'No people', '=1': 'One person', 'other': '# people'
+    '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
 
   constructor(private realtimeService : RealtimeService) { }
 
   ngOnInit() {
     this.subscription = this.realtimeService.getGroupsByQueue(this.queue.id).subscribe(groups => {
-      this.groups = groups;
+      this.groups = _.sortBy(groups, group => group.position);
     });
   }
 
@@ -46,5 +47,9 @@ export class QueueViewComponent implements OnInit, OnDestroy {
 
   finishEdit() {
     this.isEditing = false;
+  }
+
+  finishReorder(newIndex : number, queueGroup : any) {
+    this.realtimeService.reorderGroup(newIndex, this.queue.id, queueGroup.id).toPromise();
   }
 }
