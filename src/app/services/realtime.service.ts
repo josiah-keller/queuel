@@ -196,4 +196,16 @@ export class RealtimeService {
       });
     });
   }
+
+  nextGroup(queueId : string) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/queue/${queueId}/next`, {
+        queueId,
+      }, (group, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(group);
+        });
+      });
+    });
+  }
 }

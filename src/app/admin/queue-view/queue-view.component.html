@@ -6,7 +6,9 @@
 
   <app-queue-status [status]="queue.status"></app-queue-status>
   <div class="queue-control-buttons">
-    <button class="green-button" [disabled]="queue.status !== 'open'">
+    <button class="green-button" 
+      (click)="nextGroup()"
+      [disabled]="queue.status !== 'open'">
       <app-icon name="icon_group"></app-icon>
       Next
     </button>

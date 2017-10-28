@@ -63,4 +63,8 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   reverseQueue() {
     this.realtimeService.reverseQueue(this.queue.id).toPromise();
   }
+
+  nextGroup() {
+    this.realtimeService.nextGroup(this.queue.id).toPromise();
+  }
 }
