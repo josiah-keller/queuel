@@ -64,6 +64,12 @@
         border-top: 1px solid #cccccc;
       }
 
+      &:hover {
+        .queue-groups-list-item-actions {
+          opacity: 1;
+        }
+      }
+
       h4 {
         font-size: 12px;
         text-transform: uppercase;
@@ -73,6 +79,9 @@
 
       .queue-groups-list-item-actions {
         float: right;
+
+        opacity: 0;
+        transition: opacity 0.1s ease-out;
 
         .sort-handle {
           display: inline;
