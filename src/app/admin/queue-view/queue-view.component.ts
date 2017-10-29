@@ -13,7 +13,7 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   @Output() onHideRequested : EventEmitter<any> = new EventEmitter<any>();
   private editingGroup : any = null;
   private isEditing : any = false;
-  private groups : Array<any>;
+  private groups : Array<any> = [];
   private completedOffset : number;
   private subscription : Subscription;
   private peopleMapping : {[k: string]: string} = {
