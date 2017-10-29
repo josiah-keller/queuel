@@ -28,6 +28,9 @@ export class EventStaffComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.queuesSubscription.unsubscribe();
+    if (this.selectedQueue) {
+      this.groupsSubscription.unsubscribe();
+    }
   }
 
   selectQueue(queue : any) {
