@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { KioskComponent } from "./kiosk/kiosk.component";
 import { ConfigurationComponent } from "./configuration/configuration.component";
+import { EventStaffComponent } from "./event-staff/event-staff.component";
 
 const routes : Routes = [
   {
@@ -12,6 +13,10 @@ const routes : Routes = [
   {
     path: "configuration",
     component: ConfigurationComponent,
+  },
+  {
+    path: "event",
+    component: EventStaffComponent,
   },
   {
     path: "",

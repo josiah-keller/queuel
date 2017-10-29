@@ -1,0 +1,31 @@
+<app-page-container>
+  <div *ngIf="! selectedQueue">
+    <h1>Select Event</h1>
+    <button
+      *ngFor="let queue of queues"
+      (click)="selectQueue(queue)"
+      class="large-button">
+
+      {{ queue.name }}
+    </button>
+  </div>
+  <div *ngIf="selectedQueue" class="panel event-staff-queue-info">
+    <h2>{{ selectedQueue.name }}</h2>
+    <div class="event-staff-queue-status">
+      <app-queue-status [status]="selectedQueue.status"></app-queue-status>
+      Set status:
+      <button (click)="setStatus('open')" class="green-button">Open</button>
+      <button (click)="setStatus('blocked')" class="red-button">Blocked</button>
+    </div>
+  </div>
+  <div *ngIf="groups.length > 0" class="panel">
+    <h3>Current group</h3>
+    {{ groups[0].group.name }},
+    {{ groups[0].group.groupSize | i18nPlural : peopleMapping }}
+  </div>
+  <div *ngIf="groups.length > 1" class="panel">
+    <h3>Next group</h3>
+    {{ groups[1].group.name }},
+    {{ groups[1].group.groupSize | i18nPlural : peopleMapping }}
+  </div>
+</app-page-container>

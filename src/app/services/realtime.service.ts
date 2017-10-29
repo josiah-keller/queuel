@@ -84,6 +84,16 @@ export class RealtimeService {
     });
   }
 
+  updateQueue(queue : any) : Observable<any> {
+    return new Observable(observer => {
+      this.io.socket.post(`/queue/${queue.id}`, queue, (queues, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queues);
+        });
+      });
+    });
+  }
+
   deleteQueue(id : string) : Observable<any> {
     return new Observable(observer => {
       this.io.socket.delete("/queue/" + id, (queues, jwr) => {
