@@ -3,7 +3,7 @@
   <div class="hamburger" title="Menu" (click)="toggle()">
     <app-icon name="icon_menu" width="32" height="32"></app-icon>
   </div>
-  <ul>
+  <ul (click)="toggle()">
     <li>
       <a [routerLink]="['/admin', 'configuration']">Configuration</a>
     </li>
