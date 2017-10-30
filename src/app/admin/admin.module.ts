@@ -23,7 +23,7 @@ import { EventStaffComponent } from './event-staff/event-staff.component';
     CommonModule,
     RouterModule,
     FormsModule,
-    DndModule.forRoot(),
+    DndModule,
 
     AdminRoutingModule,
 

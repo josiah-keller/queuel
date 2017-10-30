@@ -10,7 +10,6 @@ import { RealtimeService } from '../../services/realtime.service';
 })
 export class KioskComponent implements OnInit, OnDestroy {
   private queues : Array<any>;
-  private shownQueues : Observable<any>;
   private shownQueueIds : Array<string> = [];
   private subscription : Subscription;
   

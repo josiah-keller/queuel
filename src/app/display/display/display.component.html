@@ -1,3 +1,49 @@
-<p>
-  display works!
-</p>
+<div class="display-container">
+  <div class="display-queues">
+    <div class="display-queue"
+      *ngFor="let queue of shownQueues">
+      <h1>
+        {{ groups[queue.id].length | i18nPlural : groupMapping }}
+        in
+        {{ queue.name }}
+        queue
+      </h1>
+      <ul>
+        <li *ngFor="let queueGroup of groups[queue.id]">
+          {{ queueGroup.group.name }},
+          {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="display-overflow-mask"></div>
+
+  <div class="display-properties"
+    [ngClass]="{ 'shown': displayPropertiesShown }">
+    
+    <div class="display-properties-toggle" (click)="toggle()">...</div>
+
+    <div>
+      Queues to show:
+      <button
+        *ngFor="let queue of hiddenQueues"
+        (click)="showQueue(queue)">
+        + {{ queue.name }}
+      </button>
+    </div>
+    <div class="display-shown-queues" dnd-sortable-container [sortableData]="shownQueues">
+      <div class="queue-order-block"
+        *ngFor="let queue of shownQueues; let i = index"
+        dnd-sortable
+        [sortableIndex]="i">
+
+        {{ queue.name }}
+
+        <a (click)="hideQueue(queue)">(x)</a>
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
