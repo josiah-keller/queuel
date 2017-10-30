@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { RealtimeService } from '../../services/realtime.service';
@@ -6,7 +7,23 @@ import { RealtimeService } from '../../services/realtime.service';
 @Component({
   selector: 'app-display',
   templateUrl: './display.component.html',
-  styleUrls: ['./display.component.scss']
+  styleUrls: ['./display.component.scss'],
+  animations: [
+    trigger("group", [
+      transition("void => *", [
+        style({
+          opacity: 0
+        }),
+        animate("500ms ease-out")
+      ]),
+      transition("* => void", [
+        animate("250ms ease-out", style({
+          transform: "translateY(-50%)",
+          opacity: 0
+        }))
+      ])
+    ]),
+  ],
 })
 export class DisplayComponent implements OnInit, OnDestroy {
   private queuesSubscription : Subscription;

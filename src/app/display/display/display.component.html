@@ -10,7 +10,7 @@
         queue
       </h1>
       <ul>
-        <li *ngFor="let queueGroup of groups[queue.id]">
+        <li *ngFor="let queueGroup of groups[queue.id]" [@group]="'in'">
           <h2>{{ queueGroup.group.name }}</h2>
           {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
         </li>
