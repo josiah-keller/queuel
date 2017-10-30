@@ -39,6 +39,7 @@ export class ConfigurationComponent implements OnInit {
   startAdd() {
     this.newQueue = {
       name: "new queue",
+      backgroundImageUrl: "",
       status: "open",
     };
     this.adding = true;

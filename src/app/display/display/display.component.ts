@@ -23,7 +23,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
   private groupMapping : {[k: string]: string} = {
-    '=0': '0 groups', '=1': 'one group', 'other': '# groups'
+    '=0': '0 groups', '=1': 'One group', 'other': '# groups'
   };
 
   constructor(private realtimeService : RealtimeService) { }

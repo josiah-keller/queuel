@@ -9,6 +9,11 @@
     </li>
     <li *ngIf="adding">
       <input type="text" class="textfield full-width" [(ngModel)]="newQueue.name">
+      <input
+        type="url"
+        class="textfield full-width"
+        placeholder="Background image URL"
+        [(ngModel)]="newQueue.backgroundImageUrl">
       <div class="buttons">
         <button class="primary" (click)="finishAdd()">Save</button>
         <button (click)="cancelAdd()">Cancel</button>

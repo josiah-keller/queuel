@@ -4,7 +4,6 @@
   height: 100vw;
   background: #000000;
   color: #ffffff;
-  padding: 20px;
 
   .display-queues {
     display: flex;
@@ -12,13 +11,32 @@
   
     .display-queue {
       flex: 1 1 0;
+      padding: 10px;
       padding-top: 100px;
+      margin-right: 10px;
+      background-size: 100%;
+      background-repeat: no-repeat;
+      height: 100vh;
 
       ul {
         list-style: none;
         margin: 0px;
         padding: 0px;
-        font-size: 20px;
+
+        li {
+          padding: 10px;
+          font-size: 20px;
+
+          &:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.2);
+          }
+
+          h2 {
+            font-weight: normal;
+            margin: 0px;
+            font-size: 30px;
+          }
+        }
       }
     }
   }

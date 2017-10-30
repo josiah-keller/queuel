@@ -1,6 +1,7 @@
 <div class="display-container">
   <div class="display-queues">
     <div class="display-queue"
+      [style.backgroundImage]="'url(' + queue.backgroundImageUrl + ')'"
       *ngFor="let queue of shownQueues">
       <h1>
         {{ groups[queue.id].length | i18nPlural : groupMapping }}
@@ -10,7 +11,7 @@
       </h1>
       <ul>
         <li *ngFor="let queueGroup of groups[queue.id]">
-          {{ queueGroup.group.name }},
+          <h2>{{ queueGroup.group.name }}</h2>
           {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
         </li>
       </ul>
