@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements OnInit {
+  private menuOpen : Boolean = false;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  toggle() {
+    this.menuOpen = ! this.menuOpen;
+  }
 }

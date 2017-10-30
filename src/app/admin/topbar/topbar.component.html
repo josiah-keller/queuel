@@ -1,5 +1,8 @@
-<nav id="topbar">
-  <div id="logo">Queuel</div>
+<nav class="topbar" [ngClass]="{ 'open': menuOpen }">
+  <div class="logo">Queuel</div>
+  <div class="hamburger" title="Menu" (click)="toggle()">
+    <app-icon name="icon_menu" width="32" height="32"></app-icon>
+  </div>
   <ul>
     <li>
       <a [routerLink]="['/admin', 'configuration']">Configuration</a>

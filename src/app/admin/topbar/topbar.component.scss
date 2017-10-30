@@ -1,4 +1,6 @@
-#topbar {
+@import "../../../variables.scss";
+
+.topbar {
   position: fixed;
   width: 100%;
   height: 50px;
@@ -9,13 +11,16 @@
   border-bottom: 1px solid #eeeeee;
   z-index: 100;
 
-  #logo {
+  .logo {
     display: inline-block;
     margin: 0px 20px;
     font-size: 20px;
     line-height: 50px;
     vertical-align: middle;
     cursor: default;
+  }
+  .hamburger {
+    display: none;
   }
   ul {
     display: inline-block;
@@ -37,6 +42,37 @@
 
         &:hover {
           background: #444444;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint) {
+  .topbar {
+    min-height: 50px;
+    height: 50px;
+    overflow: hidden;
+
+    &.open {
+      height: auto;
+    }
+
+    .hamburger {
+      display: block;
+      float: right;
+      margin: 10px 20px;
+    }
+
+    ul {
+      display: block;
+
+      li {
+        display: block;
+
+        a {
+          display: block;
+          width: 100%;
         }
       }
     }
