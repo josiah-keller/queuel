@@ -40,6 +40,14 @@ button {
       background: #007500;
     }
   }
+  &.yellow-button {
+    background: #646400;
+    box-shadow: 0px 0px 10px rgba(100, 100, 0, 0.75);
+
+    &:hover {
+      background: #757500;
+    }
+  }
   &.red-button {
     background: #640000;
     box-shadow: 0px 0px 10px rgba(100, 0, 0, 0.75);

@@ -67,4 +67,11 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   nextGroup() {
     this.realtimeService.nextGroup(this.queue.id).toPromise();
   }
+  
+  setInProgress() {
+    this.realtimeService.updateQueue({
+      id: this.queue.id,
+      status: "inProgress",
+    }).toPromise();
+  }
 }

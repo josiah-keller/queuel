@@ -40,7 +40,6 @@ export class EventStaffComponent implements OnInit, OnDestroy {
         .reject(group => group.completed || group.pending)
         .sortBy(group => group.position)
         .value();
-      console.log(this.groups);
     });
   }
 

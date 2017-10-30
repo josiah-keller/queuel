@@ -18,6 +18,9 @@
     <button (click)="reverseQueue()" title="Shift queue down">
       <app-icon name="arrow_carrot-2down_alt2"></app-icon>
     </button>
+    <button class="yellow-button" (click)="setInProgress()" title="Set status: In Progress">
+      <app-icon name="icon_hourglass_white"></app-icon>
+    </button>
   </div>
 
   <h3>{{ groups.length }} Groups
