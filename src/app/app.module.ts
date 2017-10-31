@@ -9,6 +9,7 @@ import { DndModule } from 'ng2-dnd';
 import { AppRoutingModule } from './app-routing.module';
 
 import { RealtimeService } from './services/realtime.service';
+import { AuthGuard } from './auth.guard';
 
 import { AdminModule } from './admin/admin.module';
 import { DisplayModule } from './display/display.module';
@@ -35,6 +36,7 @@ import { AppComponent } from './app.component';
   ],
   providers: [
     RealtimeService,
+    AuthGuard,
   ],
   exports: [
     DndModule,

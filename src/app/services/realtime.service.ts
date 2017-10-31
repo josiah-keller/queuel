@@ -20,6 +20,8 @@ export class RealtimeService {
   private groups : Object = {};
   private groupObservers : Object = {};
 
+  private authenticated : boolean = false;
+
   private updateCollection(collection : Array<any>, event : any) {
     if (event.verb === "created") {
       collection.push(event.data);
@@ -51,6 +53,58 @@ export class RealtimeService {
     this.io.sails.url = this.apiUrl;
   }
 
+  private doGet(path : string, callback : Function) {
+    this.io.socket.get(path, (body, jwr) => {
+      if (jwr.statusCode === 403) {
+        this.authenticated = false;
+      }
+      callback(body, jwr);
+    });
+  }
+
+  private doPost(path : string, data : any, callback : Function) {
+    this.io.socket.post(path, data, (body, jwr) => {
+      if (jwr.statusCode === 403) {
+        this.authenticated = false;
+      }
+      callback(body, jwr);
+    });
+  }
+
+  private doDelete(path : string, callback : Function) {
+    this.io.socket.delete(path, (body, jwr) => {
+      if (jwr.statusCode === 403) {
+        this.authenticated = false;
+      }
+      callback(body, jwr);
+    });
+  }
+
+  isAuthenticated() : Observable<boolean> {
+    return new Observable(observer => {
+      this.io.socket.get("/auth", (response, jwr) => {
+        this.ngZone.run(() => {
+          this.authenticated = response.authenticated;
+          observer.next(this.authenticated);
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  authenticate(password : string) : Observable<boolean> {
+    if (this.authenticated) return Observable.of(true);
+    return new Observable(observer => {
+      this.doPost("/auth", { password }, (response, jwr) => {
+        this.ngZone.run(() => {
+          this.authenticated = response.authenticated;
+          observer.next(this.authenticated);
+          observer.complete();
+        });
+      });
+    });
+  }
+
   getQueues() : Observable<any> {
     if (this.queuesObservable) return this.queuesObservable;
     this.queuesObservable = new Observable(observer => {
@@ -64,7 +118,7 @@ export class RealtimeService {
         });
         this.hasAttachedQueuesEvent = true;
       }
-      this.io.socket.get("/queue", (queues, jwr) => {
+      this.doGet("/queue", (queues, jwr) => {
         this.ngZone.run(() => {
           this.queues = _.clone(queues);
           this.updateObservers(this.queueObservers, this.queues);
@@ -76,7 +130,7 @@ export class RealtimeService {
 
   addQueue(queue : any) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post("/queue", queue, (queue, jwr) => {
+      this.doPost("/queue", queue, (queue, jwr) => {
         this.ngZone.run(() => {
           observer.next(queue);
         });
@@ -86,7 +140,7 @@ export class RealtimeService {
 
   updateQueue(queue : any) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/queue/${queue.id}`, queue, (queues, jwr) => {
+      this.doPost(`/queue/${queue.id}`, queue, (queues, jwr) => {
         this.ngZone.run(() => {
           observer.next(queues);
         });
@@ -96,7 +150,7 @@ export class RealtimeService {
 
   deleteQueue(id : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.delete("/queue/" + id, (queues, jwr) => {
+      this.doDelete("/queue/" + id, (queues, jwr) => {
         this.ngZone.run(() => {
           observer.next(queues);
         });
@@ -130,7 +184,7 @@ export class RealtimeService {
         })
         this.hasAttachedGroupsEvent[queueId] = true;
       }
-      this.io.socket.get(`/queue/${queueId}/group`, (groups, jwr) => {
+      this.doGet(`/queue/${queueId}/group`, (groups, jwr) => {
         this.ngZone.run(() => {
           this.groups[queueId] = _.clone(groups);
           this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
@@ -142,7 +196,7 @@ export class RealtimeService {
 
   addGroup(group : any) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post("/group", group, (group, jwr) => {
+      this.doPost("/group", group, (group, jwr) => {
         this.ngZone.run(() => {
           observer.next(group);
         });
@@ -152,7 +206,7 @@ export class RealtimeService {
 
   deleteGroup(id : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.delete("/group/" + id, (groups, jwr) => {
+      this.doDelete("/group/" + id, (groups, jwr) => {
         this.ngZone.run(() => {
           observer.next(groups);
         });
@@ -162,7 +216,7 @@ export class RealtimeService {
 
   updateGroup(group : any) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/group/${group.id}`, group, (groups, jwr) => {
+      this.doPost(`/group/${group.id}`, group, (groups, jwr) => {
         this.ngZone.run(() => {
           observer.next(groups);
         });
@@ -172,7 +226,7 @@ export class RealtimeService {
 
   reorderGroup(index : number, queueId : string, queueGroupId : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/queue/${queueId}/reorder`, {
+      this.doPost(`/queue/${queueId}/reorder`, {
         queueGroupId,
         index,
       }, (group, jwr) => {
@@ -185,7 +239,7 @@ export class RealtimeService {
 
   advanceQueue(queueId : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/queue/${queueId}/advance`, {
+      this.doPost(`/queue/${queueId}/advance`, {
         queueId,
       }, (group, jwr) => {
         this.ngZone.run(() => {
@@ -197,7 +251,7 @@ export class RealtimeService {
 
   reverseQueue(queueId : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/queue/${queueId}/reverse`, {
+      this.doPost(`/queue/${queueId}/reverse`, {
         queueId,
       }, (group, jwr) => {
         this.ngZone.run(() => {
@@ -209,7 +263,7 @@ export class RealtimeService {
 
   nextGroup(queueId : string) : Observable<any> {
     return new Observable(observer => {
-      this.io.socket.post(`/queue/${queueId}/next`, {
+      this.doPost(`/queue/${queueId}/next`, {
         queueId,
       }, (group, jwr) => {
         this.ngZone.run(() => {

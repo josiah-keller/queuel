@@ -1,0 +1,7 @@
+<app-page-container>
+  <p *ngIf="loginError">Incorrect password</p>
+  <label class="form-control">Password
+    <input type="password" class="textfield" [(ngModel)]="password">
+  </label>
+  <button class="primary-button" (click)="authenticate()">Login</button>
+</app-page-container>

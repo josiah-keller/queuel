@@ -17,6 +17,7 @@ import { QueueViewComponent } from './queue-view/queue-view.component';
 import { QueueStatusComponent } from './queue-status/queue-status.component';
 import { GroupEditorComponent } from './group-editor/group-editor.component';
 import { EventStaffComponent } from './event-staff/event-staff.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { EventStaffComponent } from './event-staff/event-staff.component';
     QueueStatusComponent,
     GroupEditorComponent,
     EventStaffComponent,
+    LoginComponent,
   ],
   exports: [
     AdminComponent,
