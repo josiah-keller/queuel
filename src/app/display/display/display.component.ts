@@ -26,20 +26,20 @@ import { RealtimeService } from '../../services/realtime.service';
   ],
 })
 export class DisplayComponent implements OnInit, OnDestroy {
-  private queuesSubscription : Subscription;
-  private groupsSubscriptions : any = {};
-  private queues : Array<any> = [];
-  private groups : Array<any> = [];
+  queuesSubscription : Subscription;
+  groupsSubscriptions : any = {};
+  queues : Array<any> = [];
+  groups : Array<any> = [];
 
-  private hiddenQueues : Array<any> = [];
-  private shownQueues : Array<any> = [];
+  hiddenQueues : Array<any> = [];
+  shownQueues : Array<any> = [];
 
-  private displayPropertiesShown : Boolean = false;
+  displayPropertiesShown : Boolean = false;
 
-  private peopleMapping : {[k: string]: string} = {
+  peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
-  private groupMapping : {[k: string]: string} = {
+  groupMapping : {[k: string]: string} = {
     '=0': '0 groups', '=1': 'One group', 'other': '# groups'
   };
 

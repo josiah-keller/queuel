@@ -11,12 +11,12 @@ import { RealtimeService } from '../../services/realtime.service';
 export class QueueViewComponent implements OnInit, OnDestroy {
   @Input() queue : any;
   @Output() onHideRequested : EventEmitter<any> = new EventEmitter<any>();
-  private editingGroup : any = null;
-  private isEditing : any = false;
-  private groups : Array<any> = [];
-  private completedOffset : number;
-  private subscription : Subscription;
-  private peopleMapping : {[k: string]: string} = {
+  editingGroup : any = null;
+  isEditing : any = false;
+  groups : Array<any> = [];
+  completedOffset : number;
+  subscription : Subscription;
+  peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
 

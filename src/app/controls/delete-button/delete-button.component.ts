@@ -31,7 +31,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   ],
 })
 export class DeleteButtonComponent implements OnInit {
-  private confirming : Boolean = false;
+  confirming : Boolean = false;
 
   @Output() onConfirm : EventEmitter<void> = new EventEmitter<void>();
 

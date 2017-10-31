@@ -9,12 +9,12 @@ import { RealtimeService } from '../../services/realtime.service';
   styleUrls: ['./event-staff.component.scss']
 })
 export class EventStaffComponent implements OnInit, OnDestroy {
-  private queuesSubscription : Subscription;
-  private groupsSubscription : Subscription;
-  private queues : Array<any> = [];
-  private groups : Array<any> = [];
-  private selectedQueue : any = null;
-  private peopleMapping : {[k: string]: string} = {
+  queuesSubscription : Subscription;
+  groupsSubscription : Subscription;
+  queues : Array<any> = [];
+  groups : Array<any> = [];
+  selectedQueue : any = null;
+  peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
 

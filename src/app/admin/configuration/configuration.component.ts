@@ -26,9 +26,9 @@ import { RealtimeService } from '../../services/realtime.service';
   ],
 })
 export class ConfigurationComponent implements OnInit {
-  private queues : Observable<any>;
-  private adding : Boolean = false;
-  private newQueue : any;
+  queues : Observable<any>;
+  adding : Boolean = false;
+  newQueue : any;
 
   constructor(private realtimeService : RealtimeService) { }
 

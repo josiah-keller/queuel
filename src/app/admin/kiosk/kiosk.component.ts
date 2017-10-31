@@ -9,9 +9,9 @@ import { RealtimeService } from '../../services/realtime.service';
   styleUrls: ['./kiosk.component.scss']
 })
 export class KioskComponent implements OnInit, OnDestroy {
-  private queues : Array<any>;
-  private shownQueueIds : Array<string> = [];
-  private subscription : Subscription;
+  queues : Array<any>;
+  shownQueueIds : Array<string> = [];
+  subscription : Subscription;
   
   constructor(private realtimeService : RealtimeService) { }
 

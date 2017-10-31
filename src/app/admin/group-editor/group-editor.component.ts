@@ -11,13 +11,13 @@ import { RealtimeService } from '../../services/realtime.service';
 export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() group : any;
   @Output() onFinish : EventEmitter<any> = new EventEmitter<any>();
-  private get isNew() : boolean { return !this.group; };
-  private queues : Array<any> = null;
-  private queuesBank : Array<any> = [];
-  private selectedQueues : Array<any> = [];
-  private subscription : Subscription;
-  private noSelectedQueues : boolean = false;
-  private newGroup : any = {};
+  get isNew() : boolean { return !this.group; };
+  queues : Array<any> = null;
+  queuesBank : Array<any> = [];
+  selectedQueues : Array<any> = [];
+  subscription : Subscription;
+  noSelectedQueues : boolean = false;
+  newGroup : any = {};
 
   constructor(private realtimeService : RealtimeService) { }
 
