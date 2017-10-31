@@ -23,11 +23,13 @@
   <div *ngIf="groups.length > 0" class="panel">
     <h3>Current group</h3>
     {{ groups[0].group.name }},
-    {{ groups[0].group.groupSize | i18nPlural : peopleMapping }}
+    {{ groups[0].group.groupSize | i18nPlural : peopleMapping }}<br>
+    Phone number: {{ groups[0].group.phoneNumber }}
   </div>
   <div *ngIf="groups.length > 1" class="panel">
     <h3>Next group</h3>
     {{ groups[1].group.name }},
-    {{ groups[1].group.groupSize | i18nPlural : peopleMapping }}
+    {{ groups[1].group.groupSize | i18nPlural : peopleMapping }}<br>
+    Phone number: {{ groups[1].group.phoneNumber }}
   </div>
 </app-page-container>
