@@ -1,0 +1,12 @@
+TODO
+ - Allow batching several groups at a time
+ - Allow setting any status from kiosk
+ - Allow marking any arbitrary group as completed from kiosk
+ - Add search for groups by name
+ - Allow searching through completed groups
+ - Don't show current group on display
+ - Allow modifying events order
+ - Allow deleting a single event placeholder while keeping others belonging to same group
+ - Add stats
+ - Add timer
+ - No-show counter
