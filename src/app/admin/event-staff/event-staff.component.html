@@ -12,12 +12,7 @@
   <div *ngIf="selectedQueue" class="panel event-staff-queue-info">
     <h2>{{ selectedQueue.name }}</h2>
     <div class="event-staff-queue-status">
-      <app-queue-status [status]="selectedQueue.status"></app-queue-status>
-      <span class="event-staff-queue-status-buttons">
-        Set status:
-        <button (click)="setStatus('open')" class="green-button">Open</button>
-        <button (click)="setStatus('blocked')" class="red-button">Blocked</button>
-      </span>
+      <app-queue-status [status]="selectedQueue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
     </div>
   </div>
   <div *ngIf="groups.length > 0" class="panel">
