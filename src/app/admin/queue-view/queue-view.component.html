@@ -4,7 +4,7 @@
     <button (click)="hideQueueView()">hide</button>
   </div>
 
-  <app-queue-status [status]="queue.status"></app-queue-status>
+  <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
   <div class="queue-control-buttons">
     <button class="green-button" 
       (click)="nextGroup()"
@@ -17,9 +17,6 @@
     </button>
     <button (click)="reverseQueue()" title="Shift queue down">
       <app-icon name="arrow_carrot-2down_alt2"></app-icon>
-    </button>
-    <button class="yellow-button" (click)="setInProgress()" title="Set status: In Progress">
-      <app-icon name="icon_hourglass_white"></app-icon>
     </button>
   </div>
 
