@@ -11,6 +11,7 @@ icon_hourglass.svg
 icon_hourglass_white.svg
 icon_menu.svg
 icon_pencil-edit.svg
+icon_box-checked.svg
 
 The MIT License (MIT)
 

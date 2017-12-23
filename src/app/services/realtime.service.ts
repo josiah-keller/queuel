@@ -237,6 +237,16 @@ export class RealtimeService {
     });
   }
 
+  nextGroupQueue(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.doPost(`/group/${group.id}/nextQueue`, group, (placeholder, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(placeholder);
+        });
+      });
+    })
+  }
+
   advanceQueue(queueId : string) : Observable<any> {
     return new Observable(observer => {
       this.doPost(`/queue/${queueId}/advance`, {
