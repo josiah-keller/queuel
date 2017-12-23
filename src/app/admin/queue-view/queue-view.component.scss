@@ -85,11 +85,14 @@
 
         .sort-handle {
           display: inline;
+          padding: 0px 10px;
         }
 
         button {
           background: #ffffff;
           cursor: pointer;
+          padding: 5px 10px;
+          margin-right: 0px;
 
           &:hover {
             background: #cccccc;

@@ -51,6 +51,11 @@ export class QueueViewComponent implements OnInit, OnDestroy {
     this.isEditing = false;
   }
 
+  markCompleted(index : number) {
+    let group = this.groups[index].group;
+    this.realtimeService.nextGroupQueue(group).toPromise();
+  }
+
   finishReorder(newIndex : number, queueGroup : any) {
     newIndex += this.completedOffset;
     this.realtimeService.reorderGroup(newIndex, this.queue.id, queueGroup.id).toPromise();

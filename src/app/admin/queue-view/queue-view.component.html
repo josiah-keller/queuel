@@ -43,6 +43,9 @@
           <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
             <app-icon name="arrow_move"></app-icon>
           </div>
+          <button (click)="markCompleted(i)" title="Completed, move on to next queue">
+            <app-icon name="icon_box-checked"></app-icon>
+          </button>
           <button (click)="startEdit(i)" title="Edit">
             <app-icon name="icon_pencil-edit"></app-icon>
           </button>
