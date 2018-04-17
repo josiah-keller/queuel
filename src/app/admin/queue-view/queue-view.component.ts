@@ -14,7 +14,9 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   editingGroup : any = null;
   isEditing : any = false;
   groups : Array<any> = [];
+  completedGroups : Array<any> = [];
   completedOffset : number;
+  showingCompleted: boolean = false;
   subscription : Subscription;
   peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
@@ -24,7 +26,14 @@ export class QueueViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.realtimeService.getGroupsByQueue(this.queue.id).subscribe(groups => {
-      this.groups = _.chain(groups).filter(group => !group.completed).sortBy(group => group.position).value();
+      this.groups = _.chain(groups)
+        .filter(group => !group.completed)
+        .sortBy(group => group.position)
+        .value();
+      this.completedGroups = _.chain(groups)
+        .filter(group => group.completed)
+        .sortBy(group => group.position)
+        .value();
       this.completedOffset = groups.length - this.groups.length;
     });
   }
@@ -51,6 +60,10 @@ export class QueueViewComponent implements OnInit, OnDestroy {
     this.isEditing = false;
   }
 
+  toggleCompleted() {
+    this.showingCompleted = ! this.showingCompleted;
+  }
+
   markCompleted(index : number) {
     let group = this.groups[index].group;
     this.realtimeService.nextGroupQueue(group).toPromise();
@@ -72,7 +85,7 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   nextGroup() {
     this.realtimeService.nextGroup(this.queue.id).toPromise();
   }
-  
+
   setStatus(status : string) {
     this.realtimeService.updateQueue({
       id: this.queue.id,
