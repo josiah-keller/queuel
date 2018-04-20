@@ -9,7 +9,6 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { ControlsModule } from '../controls/controls.module';
 
 import { TopbarComponent } from './topbar/topbar.component';
-import { AdminComponent } from './admin/admin.component';
 import { KioskComponent } from './kiosk/kiosk.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { PageContainerComponent } from './page-container/page-container.component';
@@ -32,7 +31,6 @@ import { LoginComponent } from './login/login.component';
   ],
   declarations: [
     TopbarComponent,
-    AdminComponent,
     KioskComponent,
     ConfigurationComponent,
     PageContainerComponent,
@@ -43,7 +41,6 @@ import { LoginComponent } from './login/login.component';
     LoginComponent,
   ],
   exports: [
-    AdminComponent,
   ]
 })
 export class AdminModule { }
