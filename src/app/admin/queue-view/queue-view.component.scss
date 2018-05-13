@@ -56,22 +56,9 @@
     box-sizing: border-box;
 
     &.first {
-      border-bottom-width: 0px;
+      border-top-width: 0px;
     }
-
-    &.collapsible {
-      &:not(.collapsed) {
-        background: #eeeeee;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5) inset;
-      }
-
-      &.collapsed {
-        .queue-groups-list-item {
-          display: none;
-        }
-      }
-    }
-
+    
     .queue-groups-list-heading {
       cursor: default;
 

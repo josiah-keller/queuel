@@ -20,57 +20,60 @@
     </button>
   </div>
 
-  <div class="queue-groups-list first collapsible" [ngClass]="{ 'collapsed': ! showingCompleted }">
-    <div class="queue-groups-list-heading">
-      <h3>
-        {{ completedGroups.length }} completed
-        <button (click)="toggleCompleted()">
-          {{ showingCompleted ? "hide" : "show" }}
-        </button>
-      </h3>
-    </div>
-    <ng-container *ngFor="let queueGroup of completedGroups">
-      <div class="queue-groups-list-item">
-        {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
-        {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
-      </div>
-    </ng-container>
-  </div>
-  <div class="queue-groups-list"
-    dnd-sortable-container
-    [sortableData]="groups">
-    <div class="queue-groups-list-heading">
-      <h3>{{ groups.length }} Groups currently in queue
-        <button (click)="addGroup()">Add</button>
-      </h3>
-    </div>
-    <ng-container *ngFor="let queueGroup of groups; let i = index">
-      <div
-        class="queue-groups-list-item"
-        [ngClass]="{ 'current-group': i === 0 }"
-        dnd-sortable
-        (onDropSuccess)="finishReorder(i, queueGroup)"
-        [sortableIndex]="i">
-        <h4 *ngIf="i === 0">Current Group</h4>
-        <h4 *ngIf="i === 1">Next Group</h4>
-        {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
-        {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
-
-        <div class="queue-groups-list-item-actions">
-          <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
-            <app-icon name="arrow_move"></app-icon>
-          </div>
-          <button (click)="markCompleted(i)" title="Completed, move on to next queue">
-            <app-icon name="icon_box-checked"></app-icon>
-          </button>
-          <button (click)="startEdit(i)" title="Edit">
-            <app-icon name="icon_pencil-edit"></app-icon>
-          </button>
+  <app-tabs>
+    <app-tabpage tabTitle="Queue">
+      <div class="queue-groups-list first"
+        dnd-sortable-container
+        [sortableData]="groups">
+        <div class="queue-groups-list-heading">
+          <h3>{{ groups.length }} Groups currently in queue
+            <button (click)="addGroup()">Add</button>
+          </h3>
         </div>
-        <div class="clear"></div>
+        <ng-container *ngFor="let queueGroup of groups; let i = index">
+          <div
+            class="queue-groups-list-item"
+            [ngClass]="{ 'current-group': i === 0 }"
+            dnd-sortable
+            (onDropSuccess)="finishReorder(i, queueGroup)"
+            [sortableIndex]="i">
+            <h4 *ngIf="i === 0">Current Group</h4>
+            <h4 *ngIf="i === 1">Next Group</h4>
+            {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
+            {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+
+            <div class="queue-groups-list-item-actions">
+              <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
+                <app-icon name="arrow_move"></app-icon>
+              </div>
+              <button (click)="markCompleted(i)" title="Completed, move on to next queue">
+                <app-icon name="icon_box-checked"></app-icon>
+              </button>
+              <button (click)="startEdit(i)" title="Edit">
+                <app-icon name="icon_pencil-edit"></app-icon>
+              </button>
+            </div>
+            <div class="clear"></div>
+          </div>
+        </ng-container>
       </div>
-    </ng-container>
-  </div>
+    </app-tabpage>
+    <app-tabpage tabTitle="Completed">
+        <div class="queue-groups-list first">
+          <div class="queue-groups-list-heading">
+            <h3>
+              {{ completedGroups.length }} completed
+            </h3>
+          </div>
+          <ng-container *ngFor="let queueGroup of completedGroups">
+            <div class="queue-groups-list-item">
+              {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
+              {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+            </div>
+          </ng-container>
+        </div>
+      </app-tabpage>
+  </app-tabs>
 </div>
 <app-group-editor
   *ngIf="isEditing"
