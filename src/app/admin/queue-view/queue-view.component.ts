@@ -16,7 +16,6 @@ export class QueueViewComponent implements OnInit, OnDestroy {
   groups : Array<any> = [];
   completedGroups : Array<any> = [];
   completedOffset : number;
-  showingCompleted: boolean = false;
   subscription : Subscription;
   peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
@@ -58,10 +57,6 @@ export class QueueViewComponent implements OnInit, OnDestroy {
 
   finishEdit() {
     this.isEditing = false;
-  }
-
-  toggleCompleted() {
-    this.showingCompleted = ! this.showingCompleted;
   }
 
   markCompleted(index : number) {

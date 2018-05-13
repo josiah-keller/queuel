@@ -59,13 +59,10 @@
       </div>
     </app-tabpage>
     <app-tabpage tabTitle="Completed">
-        <div class="queue-groups-list first collapsible" [ngClass]="{ 'collapsed': ! showingCompleted }">
+        <div class="queue-groups-list first">
           <div class="queue-groups-list-heading">
             <h3>
               {{ completedGroups.length }} completed
-              <button (click)="toggleCompleted()">
-                {{ showingCompleted ? "hide" : "show" }}
-              </button>
             </h3>
           </div>
           <ng-container *ngFor="let queueGroup of completedGroups">
