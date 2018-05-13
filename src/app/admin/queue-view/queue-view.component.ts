@@ -32,6 +32,7 @@ export class QueueViewComponent implements OnInit, OnDestroy {
       this.completedGroups = _.chain(groups)
         .filter(group => group.completed)
         .sortBy(group => group.position)
+        .reverse()
         .value();
       this.completedOffset = groups.length - this.groups.length;
     });
