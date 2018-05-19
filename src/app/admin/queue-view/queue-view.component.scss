@@ -107,7 +107,14 @@
           padding: 5px 10px;
           margin-right: 0px;
 
-          &:hover {
+          &:disabled {
+            opacity: 0.3;
+
+            &:hover {
+              cursor: default;
+            }
+          }
+          &:hover:not(:disabled) {
             background: #cccccc;
           }
         }
