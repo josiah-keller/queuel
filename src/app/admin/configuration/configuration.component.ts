@@ -41,6 +41,7 @@ export class ConfigurationComponent implements OnInit {
       name: "new queue",
       backgroundImageUrl: "",
       status: "open",
+      targetBatchSize: 4,
     };
     this.adding = true;
   }
