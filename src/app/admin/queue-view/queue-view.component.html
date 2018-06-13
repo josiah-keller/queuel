@@ -1,23 +1,10 @@
 <div class="queue-container">
-  <h2>{{ queue.name }}</h2>
+  <h2>
+    {{ queue.name }}
+    <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
+  </h2>
   <div class="hide-button">
     <button (click)="hideQueueView()">hide</button>
-  </div>
-
-  <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
-  <div class="queue-control-buttons">
-    <button class="green-button" 
-      (click)="nextGroup()"
-      [disabled]="queue.status !== 'open'">
-      <app-icon name="icon_group"></app-icon>
-      Next
-    </button>
-    <button (click)="advanceQueue()" title="Shift queue up">
-      <app-icon name="arrow_carrot-2up_alt2"></app-icon>
-    </button>
-    <button (click)="reverseQueue()" title="Shift queue down">
-      <app-icon name="arrow_carrot-2down_alt2"></app-icon>
-    </button>
   </div>
 
   <app-tabs>
