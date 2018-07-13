@@ -7,6 +7,8 @@
     <button (click)="hideQueueView()">hide</button>
   </div>
 
+  <app-queue-batches [queue]="queue"></app-queue-batches>
+
   <app-tabs>
     <app-tabpage tabTitle="Queue">
       <div class="queue-groups-list first"
@@ -19,13 +21,12 @@
         </div>
         <ng-container *ngFor="let queueGroup of groups; let i = index">
           <div
+            [hidden]="!! queueGroup.batch"
             class="queue-groups-list-item"
             [ngClass]="{ 'current-group': i === 0 }"
             dnd-sortable
             (onDropSuccess)="finishReorder(i, queueGroup)"
             [sortableIndex]="i">
-            <h4 *ngIf="i === 0">Current Group</h4>
-            <h4 *ngIf="i === 1">Next Group</h4>
             {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
             {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
 
@@ -33,6 +34,9 @@
               <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
                 <app-icon name="arrow_move"></app-icon>
               </div>
+              <button (click)="batchGroup(i)" title="Add this group to Up Next batch">
+                <app-icon name="icon_plus_alt2"></app-icon>
+              </button>
               <button [disabled]="queueGroup.pending" (click)="markCompleted(i)" title="Completed, move on to next queue">
                 <app-icon name="icon_box-checked"></app-icon>
               </button>

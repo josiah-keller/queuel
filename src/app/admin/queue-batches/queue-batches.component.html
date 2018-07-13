@@ -1,0 +1,23 @@
+<div class="queue-batches">
+  <div class="queue-batch-current">
+    <h3>Currently in {{ queue.name }}</h3>
+    
+
+    {{ calculateBatchSize(currentBatchGroups) }} out of {{ queue.targetBatchSize }}
+  </div>
+  <div class="queue-batch-next">
+    <h3>Up next</h3>
+
+    <ul class="queue-batch-list">
+      <li *ngFor="let queueGroup of nextBatchGroups; let i = index">
+        <button (click)="removeFromBatch(nextBatchGroups, i)" title="Remove this group from the batch">
+          <app-icon name="icon_minus_alt2"></app-icon>
+        </button>
+        {{ queueGroup.group.name }}
+      </li>
+    </ul>
+    
+    <button (click)="populate()">Populate</button>
+    {{ calculateBatchSize(nextBatchGroups) }} out of {{ queue.targetBatchSize }}
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.queue-batches {
+  display: flex;
+  margin: 0px 0px 10px 0px;
+
+  .queue-batch-current, .queue-batch-next {
+    flex: 1 1 auto;
+    background: #eeeeee;
+    padding: 10px;
+
+    h3 {
+      font-size: 12px;
+      margin: 0px 0px 5px 0px;
+      text-transform: uppercase;
+    }
+
+    .queue-batch-list {
+      list-style-type: none;
+      margin: 0px;
+      padding: 0px;
+
+      li {
+        button {
+          background: transparent;
+          cursor: pointer;
+          padding: 2px;
+
+          &:hover {
+            opacity: 0.5;
+          }
+        }
+        
+        &:not(:first-child) {
+          margin-top: 2px;
+          padding-top: 2px;
+          border-top: 1px solid #cccccc;
+        }
+      }
+    }
+  }
+}

@@ -20,6 +20,16 @@ export class RealtimeService {
   private groups : Object = {};
   private groupObservers : Object = {};
 
+  private batchesObservables : Object = {};
+  private hasAttachedBatchesEvent : Object = {};
+  private batches : Object = {};
+  private batchObservers : Object = {};
+
+  private batchQueueGroupsObservables : Object =  {};
+  private hasAttachedBatchQueueGroupsEvent : Object = {};
+  private batchQueueGroups : Object = {};
+  private batchQueueGroupsObservers : Object = {};
+
   private authenticated : boolean = false;
 
   private updateCollection(collection : Array<any>, event : any) {
@@ -181,7 +191,7 @@ export class RealtimeService {
               this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
             });
           }
-        })
+        });
         this.hasAttachedGroupsEvent[queueId] = true;
       }
       this.doGet(`/queue/${queueId}/group`, (groups, jwr) => {
@@ -278,6 +288,105 @@ export class RealtimeService {
       }, (group, jwr) => {
         this.ngZone.run(() => {
           observer.next(group);
+        });
+      });
+    });
+  }
+
+  getBatchesByQueue(queueId : string) : Observable<any> {
+    if (this.batchesObservables[queueId]) return this.batchesObservables[queueId];
+    this.batchesObservables[queueId] = new Observable(observer => {
+      if (! this.batchObservers[queueId]) this.batchObservers[queueId] = [];
+      if (! this.batches[queueId]) this.batches[queueId] = [];
+
+      this.batchObservers[queueId].push(observer);
+      if (! this.hasAttachedBatchesEvent[queueId]) {
+        this.io.socket.on("batch", event => {
+          if (event.data && event.data.queue != queueId) return;
+          this.ngZone.run(() => {
+            this.updateCollection(this.batches[queueId], event);
+            this.updateObservers(this.batchObservers[queueId], this.batches[queueId]);
+          });
+        });
+        this.hasAttachedBatchesEvent[queueId] = true;
+      }
+      this.doGet(`/queue/${queueId}/batch`, (batches, jwr) => {
+        this.ngZone.run(() => {
+          this.batches[queueId] = _.clone(batches);
+          this.updateObservers(this.batchObservers[queueId], this.batches[queueId]);
+        });
+      });
+    });
+    return this.batchesObservables[queueId];
+  }
+
+  getQueueGroupsForBatch(batchId : string) : Observable<any> {
+    if (this.batchQueueGroupsObservables[batchId]) return this.batchQueueGroupsObservables[batchId];
+    this.batchQueueGroupsObservables[batchId] = new Observable(observer => {
+      if (! this.batchQueueGroupsObservers[batchId]) this.batchQueueGroupsObservers[batchId] = [];
+      if (! this.batchQueueGroups[batchId]) this.batchQueueGroups[batchId] = [];
+
+      this.batchQueueGroupsObservers[batchId].push(observer);
+      if (! this.hasAttachedBatchQueueGroupsEvent[batchId]) {
+        this.io.socket.on("queuegroup", event => {
+          if (event.data && event.data.batch != batchId) return; // Ignore other batches
+          this.ngZone.run(() => {
+            this.updateCollection(this.batchQueueGroups[batchId], event);
+            this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+          });
+        });
+        this.io.socket.on("group", event => {
+          // Only interested in update events; others covered by queueGroup events
+          if (event.verb === "updated") {
+            this.ngZone.run(() => {
+              this.updateCollection(_.map(this.batchQueueGroups[batchId], "group"), event);
+              this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+            });
+          }
+        });
+        this.io.socket.on("batch", event => {
+          if (event.id != batchId) return; // Ignore other batches
+          if (event.verb === "addedTo") {
+            this.ngZone.run(() => {
+              console.log(event);
+              this.batchQueueGroups[batchId].push(event.added);
+            });
+          }
+          if (event.verb === "removedFrom") {
+            this.ngZone.run(() => {
+              _.remove(this.batchQueueGroups[batchId], item => item.id == event.removedId);
+            });
+          }
+        });
+        this.hasAttachedBatchQueueGroupsEvent[batchId] = true;
+      }
+      this.doGet(`/batch/${batchId}/groups`, (batchQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          this.batchQueueGroups[batchId] = _.clone(batchQueueGroups);
+          this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+        });
+      });
+    });
+    return this.batchQueueGroupsObservables[batchId];
+  }
+
+  addQueueGroupToBatch(batchId : string, queueGroupId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/groups`, {
+        queueGroupId,
+      }, (queueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queueGroup);
+        });
+      });
+    });
+  }
+
+  removeQueueGroupFromBatch(batchId : string, queueGroupId : string) {
+    return new Observable(observer => {
+      this.doDelete(`/batch/${batchId}/groups/${queueGroupId}`, (queueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queueGroup);
         });
       });
     });
