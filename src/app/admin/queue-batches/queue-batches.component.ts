@@ -1,7 +1,6 @@
 import { Component, OnInit, OnChanges, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RealtimeService } from '../../services/realtime.service';
-import { totalmem } from 'os';
 
 @Component({
   selector: 'app-queue-batches',
