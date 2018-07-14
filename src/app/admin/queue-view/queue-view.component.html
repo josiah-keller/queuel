@@ -34,7 +34,7 @@
               <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
                 <app-icon name="arrow_move"></app-icon>
               </div>
-              <button (click)="batchGroup(i)" title="Add this group to Up Next batch">
+              <button [disabled]="queueGroup.pending" (click)="batchGroup(i)" title="Add this group to Up Next batch">
                 <app-icon name="icon_plus_alt2"></app-icon>
               </button>
               <button [disabled]="queueGroup.pending" (click)="markCompleted(i)" title="Completed, move on to next queue">
