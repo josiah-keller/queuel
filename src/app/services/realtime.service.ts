@@ -391,4 +391,14 @@ export class RealtimeService {
       });
     });
   }
+
+  autoPopulateBatch(batchId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/populate`, {}, (addedQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(addedQueueGroups);
+        });
+      });
+    });
+  }
 }

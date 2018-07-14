@@ -40,6 +40,10 @@ export class QueueBatchesComponent implements OnInit, OnChanges, OnDestroy {
     this.realtimeService.removeQueueGroupFromBatch(queueGroup.batch, queueGroup.id).toPromise();
   }
 
+  populate() {
+    this.realtimeService.autoPopulateBatch(this.queue.nextBatch.id).toPromise();
+  }
+
   calculateBatchSize(queueGroups : Array<any>) {
     return queueGroups.reduce((total, queueGroup) => {
       return total + queueGroup.group.groupSize;
