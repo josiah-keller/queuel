@@ -257,30 +257,6 @@ export class RealtimeService {
     })
   }
 
-  advanceQueue(queueId : string) : Observable<any> {
-    return new Observable(observer => {
-      this.doPost(`/queue/${queueId}/advance`, {
-        queueId,
-      }, (group, jwr) => {
-        this.ngZone.run(() => {
-          observer.next(group);
-        });
-      });
-    });
-  }
-
-  reverseQueue(queueId : string) : Observable<any> {
-    return new Observable(observer => {
-      this.doPost(`/queue/${queueId}/reverse`, {
-        queueId,
-      }, (group, jwr) => {
-        this.ngZone.run(() => {
-          observer.next(group);
-        });
-      });
-    });
-  }
-
   nextGroup(queueId : string) : Observable<any> {
     return new Observable(observer => {
       this.doPost(`/queue/${queueId}/next`, {
