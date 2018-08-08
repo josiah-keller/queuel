@@ -2,6 +2,12 @@
   <h2>
     {{ queue.name }}
     <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
+    <button (click)="nextBatch()"
+      class="green-button"
+      [disabled]="queue.status !== 'open'">
+      <app-icon name="icon_group"></app-icon>
+      Next
+    </button>
   </h2>
   <div class="hide-button">
     <button (click)="hideQueueView()">hide</button>

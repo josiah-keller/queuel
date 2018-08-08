@@ -1,12 +1,16 @@
 <div class="queue-batches">
   <div class="queue-batch-current">
-    <h3>Currently in {{ queue.name }}</h3>
-    
+    <h3>Currently in {{ queue.name }} ({{ calculateBatchSize(currentBatchGroups) }} of {{ queue.targetBatchSize }})</h3>
 
-    {{ calculateBatchSize(currentBatchGroups) }} out of {{ queue.targetBatchSize }}
+    <ul class="queue-batch-list">
+      <li *ngFor="let queueGroup of currentBatchGroups">
+        {{ queueGroup.group.name }}
+        ({{ queueGroup.group.groupSize }})
+      </li>
+    </ul>
   </div>
   <div class="queue-batch-next">
-    <h3>Up next</h3>
+    <h3>Up next ({{ calculateBatchSize(nextBatchGroups) }} of {{ queue.targetBatchSize }})</h3>
 
     <ul class="queue-batch-list">
       <li *ngFor="let queueGroup of nextBatchGroups; let i = index">
@@ -19,6 +23,5 @@
     </ul>
     
     <button (click)="populate()">Populate</button>
-    {{ calculateBatchSize(nextBatchGroups) }} out of {{ queue.targetBatchSize }}
   </div>
 </div>

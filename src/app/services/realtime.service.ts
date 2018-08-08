@@ -41,7 +41,9 @@ export class RealtimeService {
     }
     if (event.verb === "updated") {
       let index = _.findIndex(collection, item => item.id == event.id);
-      _.assign(collection[index], event.data);
+      let newData = _.cloneDeep(collection[index]);
+      _.assign(newData, event.data);
+      collection[index] = newData;
     }
     if (event.verb === "addedTo") {
       let index = _.findIndex(collection, item => item.id == event.id);
@@ -257,13 +259,13 @@ export class RealtimeService {
     })
   }
 
-  nextGroup(queueId : string) : Observable<any> {
+  nextBatch(queueId : string) : Observable<any> {
     return new Observable(observer => {
       this.doPost(`/queue/${queueId}/next`, {
         queueId,
-      }, (group, jwr) => {
+      }, (batch, jwr) => {
         this.ngZone.run(() => {
-          observer.next(group);
+          observer.next(batch);
         });
       });
     });
@@ -324,7 +326,6 @@ export class RealtimeService {
           if (event.id != batchId) return; // Ignore other batches
           if (event.verb === "addedTo") {
             this.ngZone.run(() => {
-              console.log(event);
               this.batchQueueGroups[batchId].push(event.added);
             });
           }
