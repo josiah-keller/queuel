@@ -20,6 +20,12 @@ export class QueueBatchesComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
+    if (this.currentBatchGroupsSubscription) {
+      this.currentBatchGroupsSubscription.unsubscribe();
+    }
+    if (this.nextBatchGroupSubscription) { 
+      this.nextBatchGroupSubscription.unsubscribe();
+    }
     this.currentBatchGroupsSubscription =
       this.realtimeService.getQueueGroupsForBatch(this.queue.currentBatch.id).subscribe(groups => {
         this.currentBatchGroups = groups;
