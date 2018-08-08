@@ -1,30 +1,38 @@
 <app-page-container>
-  <div *ngIf="! selectedQueue">
+  <div *ngIf="selectedQueueIndex === null">
     <h1>Select Event</h1>
     <button
-      *ngFor="let queue of queues"
-      (click)="selectQueue(queue)"
+      *ngFor="let queue of queues; let i = index"
+      (click)="selectQueue(i)"
       class="large-button">
 
       {{ queue.name }}
     </button>
   </div>
-  <div *ngIf="selectedQueue" class="panel event-staff-queue-info">
-    <h2>{{ selectedQueue.name }}</h2>
+  <div *ngIf="selectedQueueIndex !== null" class="panel event-staff-queue-info">
+    <h2>{{ queues[selectedQueueIndex].name }}</h2>
     <div class="event-staff-queue-status">
-      <app-queue-status [status]="selectedQueue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
+      <app-queue-status [status]="queues[selectedQueueIndex].status" (onStatusChange)="setStatus($event)"></app-queue-status>
     </div>
   </div>
-  <div *ngIf="groups.length > 0" class="panel">
-    <h3>Current group</h3>
-    {{ groups[0].group.name }},
-    {{ groups[0].group.groupSize | i18nPlural : peopleMapping }}<br>
-    Phone number: {{ groups[0].group.phoneNumber }}
+  <div *ngIf="currentBatchGroups.length > 0" class="panel">
+    <h3>Current batch ({{ calculateBatchSize(currentBatchGroups) | i18nPlural : peopleMapping }})</h3>
+    <ul>
+      <li *ngFor="let queueGroup of currentBatchGroups">
+        {{ queueGroup.group.name }},
+        {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}<br>
+        Phone number: {{ queueGroup.group.phoneNumber }}
+      </li>
+    </ul>
   </div>
-  <div *ngIf="groups.length > 1" class="panel">
-    <h3>Next group</h3>
-    {{ groups[1].group.name }},
-    {{ groups[1].group.groupSize | i18nPlural : peopleMapping }}<br>
-    Phone number: {{ groups[1].group.phoneNumber }}
-  </div>
+  <div *ngIf="nextBatchGroups.length > 0" class="panel">
+      <h3>Next batch ({{ calculateBatchSize(nextBatchGroups) | i18nPlural : peopleMapping }})</h3>
+      <ul>
+        <li *ngFor="let queueGroup of nextBatchGroups">
+          {{ queueGroup.group.name }},
+          {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}<br>
+          Phone number: {{ queueGroup.group.phoneNumber }}
+        </li>
+      </ul>
+    </div>
 </app-page-container>
