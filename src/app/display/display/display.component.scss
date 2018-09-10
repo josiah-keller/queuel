@@ -1,3 +1,15 @@
+@keyframes pulsate {
+  0% {
+    box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0px 0px 0px 20px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.1);
+  }
+}
+
 .display-container {
   position: fixed;
   width: 100vw;
@@ -99,5 +111,30 @@
         }
       }
     }
+  }
+}
+
+.display-alert {
+  position: fixed;
+  width: 50vw;
+  left: 25vw;
+  top: 35vh;
+  background: rgba(255, 255, 255, 0.75);
+  color: #000000;
+  padding: 20px;
+  font-size: 30px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+
+  animation: pulsate 2s linear infinite;
+
+  h1 {
+    font-size: 30px;
+    text-align: center;
+  }
+  .display-alert-content {
+    white-space: pre;
+    font-size: 40px;
   }
 }

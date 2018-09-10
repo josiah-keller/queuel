@@ -11,7 +11,7 @@ export class RealtimeService {
   private apiUrl : string;
 
   private queuesObservable : Observable<any>;
-  private hasAttachedQueuesEvent : Boolean = false;
+  private hasAttachedQueuesEvent : boolean = false;
   private queues : Array<any>;
   private queueObservers : Array<Observer<any>> = [];
 
@@ -29,6 +29,10 @@ export class RealtimeService {
   private hasAttachedBatchQueueGroupsEvent : Object = {};
   private batchQueueGroups : Object = {};
   private batchQueueGroupsObservers : Object = {};
+
+  private alertsObservable : Observable<any>;
+  private hasAttachedAlertsEvent : boolean = false;
+  private alertObservers : Array<Observer<any>> = [];
 
   private authenticated : boolean = false;
 
@@ -377,5 +381,33 @@ export class RealtimeService {
         });
       });
     });
+  }
+
+  alertBatch(batchId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/alert`, {}, (createdAlert, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(createdAlert);
+        });
+      });
+    });
+  }
+
+  subscribeAlerts() {
+    if (this.alertsObservable) return this.alertsObservable;
+    this.alertsObservable = new Observable(observer => {
+      this.alertObservers.push(observer);
+      if (! this.hasAttachedAlertsEvent) {
+        this.io.socket.on("alert", event => {
+          this.ngZone.run(() => {
+            this.updateObservers(this.alertObservers, event.data);
+          });
+        });
+        this.hasAttachedAlertsEvent = true;
+      }
+      this.doGet("/alerts", (alerts, jwr) => {
+      });
+    });
+    return this.alertsObservable;
   }
 }

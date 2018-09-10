@@ -12,16 +12,16 @@ import { RealtimeService } from '../../services/realtime.service';
       transition("void => *", [
         style({
           transform: "scale(0.9)",
-          opacity: 0
+          opacity: 0,
         }),
-        animate("100ms ease-out")
+        animate("100ms ease-out"),
       ]),
       transition("* => void", [
         animate("100ms ease-out", style({
           transform: "scale(0.9)",
-          opacity: 0
-        }))
-      ])
+          opacity: 0,
+        })),
+      ]),
     ]),
   ],
 })
