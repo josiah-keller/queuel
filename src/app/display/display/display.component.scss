@@ -30,6 +30,12 @@
       background-repeat: no-repeat;
       height: 100vh;
 
+      .display-batch {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
       ul {
         list-style: none;
         margin: 0px;

@@ -51,8 +51,10 @@ import { RealtimeService } from '../../services/realtime.service';
 export class DisplayComponent implements OnInit, OnDestroy {
   queuesSubscription : Subscription;
   groupsSubscriptions : any = {};
+  batchSubscriptions : any = {};
   queues : Array<any> = [];
-  groups : Array<any> = [];
+  groups : any = {};
+  batchGroups : any = {};
 
   alertsSubscription : Subscription;
   alertsBuffer : Array<any> = [];
@@ -68,6 +70,9 @@ export class DisplayComponent implements OnInit, OnDestroy {
   groupMapping : {[k: string]: string} = {
     '=0': '0 groups', '=1': 'One group', 'other': '# groups'
   };
+  theseMapping : {[k: string]: string} = {
+    '=0': 'No group', '=1': 'This group', 'other': 'These groups'
+  };
 
   constructor(private realtimeService : RealtimeService) { }
 
@@ -75,6 +80,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
     this.queuesSubscription = this.realtimeService.getQueues().subscribe(queues => {
       this.queues = queues;
       this.hiddenQueues = _.difference(this.queues,  this.shownQueues);
+      this.updateBatchSubscriptions();
     });
     this.alertsSubscription = this.realtimeService.subscribeAlerts().subscribe(newAlert => {
       this.bufferAlert(newAlert);
@@ -86,6 +92,9 @@ export class DisplayComponent implements OnInit, OnDestroy {
     _.forOwn(this.groupsSubscriptions, (subscription : Subscription) => {
       subscription.unsubscribe();
     });
+    _.forOwn(this.batchSubscriptions, (subscription : Subscription) => {
+      subscription.unsubscribe();
+    })
   }
 
   showQueue(queue : any) {
@@ -96,10 +105,30 @@ export class DisplayComponent implements OnInit, OnDestroy {
         this.updateGroups(groups, queue.id);
       });
     this.groups[queue.id] = [];
+    this.subscribeToBatch(queue);
+  }
+
+  subscribeToBatch(queue : any) {
+    this.batchSubscriptions[queue.id] = this.realtimeService.getQueueGroupsForBatch(queue.nextBatch.id)
+      .subscribe(queueGroups => {
+        this.batchGroups[queue.id] = queueGroups;
+      });
+    this.batchGroups[queue.id] = [];
+  }
+
+  updateBatchSubscriptions() {
+    _.forEach(this.queues, queue => {
+      if (this.batchSubscriptions.hasOwnProperty(queue.id)) {
+        this.batchSubscriptions[queue.id].unsubscribe();
+        this.subscribeToBatch(queue);
+      }
+    });
   }
 
   hideQueue(queue : any) {
     _.pull(this.shownQueues, queue);
+    this.groupsSubscriptions[queue.id].unsubscribe();
+    this.batchSubscriptions[queue.id].unsubscribe();
     this.hiddenQueues.push(queue);
   }
 
@@ -109,7 +138,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
 
   updateGroups(groups : Array<any>, queueId : string) {
     this.groups[queueId] = _.chain(groups)
-      .reject(group => group.completed || group.pending)
+      .reject(group => group.completed || group.pending || group.batch)
       .sortBy(group => group.position)
       .value();
   }

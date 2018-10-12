@@ -3,6 +3,19 @@
     <div class="display-queue"
       [style.backgroundImage]="'url(' + queue.backgroundImageUrl + ')'"
       *ngFor="let queue of shownQueues">
+      <div class="display-batch">
+        <h1>
+          {{ batchGroups[queue.id].length | i18nPlural : theseMapping }}
+          up next
+        </h1>
+        <ul>
+          <li *ngFor="let queueGroup of batchGroups[queue.id]">
+            <h2>{{ queueGroup.group.name }}</h2>
+            {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+          </li>
+        </ul>
+      </div>
+
       <h1>
         {{ groups[queue.id].length | i18nPlural : groupMapping }}
         in
