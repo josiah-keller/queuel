@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
@@ -10,10 +9,12 @@ import { RealtimeService } from '../../services/realtime.service';
 })
 export class EventStaffComponent implements OnInit, OnDestroy {
   queuesSubscription : Subscription;
-  groupsSubscription : Subscription;
+  currentBatchGroupsSubscription : Subscription;
+  nextBatchGroupSubscription : Subscription;
   queues : Array<any> = [];
-  groups : Array<any> = [];
-  selectedQueue : any = null;
+  currentBatchGroups : Array<any> = [];
+  nextBatchGroups : Array<any> = [];
+  selectedQueueIndex : number = null;
   peopleMapping : {[k: string]: string} = {
     '=0': 'zero people', '=1': 'one person', 'other': '# people'
   };
@@ -23,31 +24,50 @@ export class EventStaffComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.queuesSubscription = this.realtimeService.getQueues().subscribe(queues => {
       this.queues = queues;
+      if (this.selectedQueueIndex !== null) this.selectQueue(this.selectedQueueIndex);
     });
   }
 
   ngOnDestroy() {
     this.queuesSubscription.unsubscribe();
-    if (this.selectedQueue) {
-      this.groupsSubscription.unsubscribe();
+    if (this.currentBatchGroupsSubscription) {
+      this.currentBatchGroupsSubscription.unsubscribe();
+    }
+    if (this.nextBatchGroupSubscription) { 
+      this.nextBatchGroupSubscription.unsubscribe();
     }
   }
 
-  selectQueue(queue : any) {
-    this.selectedQueue = queue;
-    this.groupsSubscription = this.realtimeService.getGroupsByQueue(queue.id).subscribe(groups => {
-      this.groups = _.chain(groups)
-        .reject(group => group.completed || group.pending)
-        .sortBy(group => group.position)
-        .value();
-    });
+  selectQueue(index : number) {
+    this.selectedQueueIndex = index;
+    let queue = this.queues[index];
+    if (this.currentBatchGroupsSubscription) {
+      this.currentBatchGroupsSubscription.unsubscribe();
+    }
+    if (this.nextBatchGroupSubscription) { 
+      this.nextBatchGroupSubscription.unsubscribe();
+    }
+    this.currentBatchGroupsSubscription = this.realtimeService.getQueueGroupsForBatch(queue.currentBatch.id)
+      .subscribe(groups => {
+        this.currentBatchGroups = groups;
+      });
+    this.nextBatchGroupSubscription = this.realtimeService.getQueueGroupsForBatch(queue.nextBatch.id)
+      .subscribe(groups => {
+        this.nextBatchGroups = groups;
+      });
   }
 
   setStatus(status : string) {
-    this.selectedQueue.status = status;
+    this.queues[this.selectedQueueIndex].status = status;
     this.realtimeService.updateQueue({
-      id: this.selectedQueue.id,
+      id: this.queues[this.selectedQueueIndex].id,
       status: status
     }).toPromise();
+  }
+
+  calculateBatchSize(queueGroups : Array<any>) {
+    return queueGroups.reduce((total, queueGroup) => {
+      return total + queueGroup.group.groupSize;
+    }, 0);
   }
 }

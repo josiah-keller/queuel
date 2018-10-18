@@ -3,6 +3,19 @@
     <div class="display-queue"
       [style.backgroundImage]="'url(' + queue.backgroundImageUrl + ')'"
       *ngFor="let queue of shownQueues">
+      <div class="display-batch">
+        <h1>
+          {{ batchGroups[queue.id].length | i18nPlural : theseMapping }}
+          up next
+        </h1>
+        <ul>
+          <li *ngFor="let queueGroup of batchGroups[queue.id]">
+            <h2>{{ queueGroup.group.name }}</h2>
+            {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+          </li>
+        </ul>
+      </div>
+
       <h1>
         {{ groups[queue.id].length | i18nPlural : groupMapping }}
         in
@@ -47,4 +60,10 @@
       <div class="clear"></div>
     </div>
   </div>
+</div>
+<div *ngFor="let alert of alertsBuffer; let i=index"
+  class="display-alert"
+  [@alert]="i === 0 ? 'in' : 'waiting'">
+  <h1>{{ alert.title }}</h1>
+  <div class="display-alert-content">{{ alert.content }}</div>
 </div>

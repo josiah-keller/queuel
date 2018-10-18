@@ -1,24 +1,19 @@
 <div class="queue-container">
-  <h2>{{ queue.name }}</h2>
-  <div class="hide-button">
-    <button (click)="hideQueueView()">hide</button>
-  </div>
-
-  <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
-  <div class="queue-control-buttons">
-    <button class="green-button" 
-      (click)="nextGroup()"
+  <h2>
+    {{ queue.name }}
+    <app-queue-status [status]="queue.status" (onStatusChange)="setStatus($event)"></app-queue-status>
+    <button (click)="nextBatch()"
+      class="green-button"
       [disabled]="queue.status !== 'open'">
       <app-icon name="icon_group"></app-icon>
       Next
     </button>
-    <button (click)="advanceQueue()" title="Shift queue up">
-      <app-icon name="arrow_carrot-2up_alt2"></app-icon>
-    </button>
-    <button (click)="reverseQueue()" title="Shift queue down">
-      <app-icon name="arrow_carrot-2down_alt2"></app-icon>
-    </button>
+  </h2>
+  <div class="hide-button">
+    <button (click)="hideQueueView()">hide</button>
   </div>
+
+  <app-queue-batches [queue]="queue"></app-queue-batches>
 
   <app-tabs>
     <app-tabpage tabTitle="Queue">
@@ -32,13 +27,12 @@
         </div>
         <ng-container *ngFor="let queueGroup of groups; let i = index">
           <div
+            [hidden]="!! queueGroup.batch"
             class="queue-groups-list-item"
             [ngClass]="{ 'current-group': i === 0 }"
             dnd-sortable
             (onDropSuccess)="finishReorder(i, queueGroup)"
             [sortableIndex]="i">
-            <h4 *ngIf="i === 0">Current Group</h4>
-            <h4 *ngIf="i === 1">Next Group</h4>
             {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
             {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
 
@@ -46,6 +40,9 @@
               <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
                 <app-icon name="arrow_move"></app-icon>
               </div>
+              <button [disabled]="queueGroup.pending" (click)="batchGroup(i)" title="Add this group to Up Next batch">
+                <app-icon name="icon_plus_alt2"></app-icon>
+              </button>
               <button [disabled]="queueGroup.pending" (click)="markCompleted(i)" title="Completed, move on to next queue">
                 <app-icon name="icon_box-checked"></app-icon>
               </button>

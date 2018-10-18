@@ -8,12 +8,17 @@
       <app-delete-button (onConfirm)="deleteQueue(queue.id)">Delete</app-delete-button>
     </li>
     <li *ngIf="adding">
-      <input type="text" class="textfield full-width" [(ngModel)]="newQueue.name">
+      <input type="text" class="textfield full-width spaced" [(ngModel)]="newQueue.name">
       <input
         type="url"
-        class="textfield full-width"
+        class="textfield full-width spaced"
         placeholder="Background image URL"
         [(ngModel)]="newQueue.backgroundImageUrl">
+      Target batch size:
+      <input
+        type="number"
+        class="textfield"
+        [(ngModel)]="newQueue.targetBatchSize">
       <div class="buttons">
         <button class="primary" (click)="finishAdd()">Save</button>
         <button (click)="cancelAdd()">Cancel</button>

@@ -11,7 +11,7 @@ export class RealtimeService {
   private apiUrl : string;
 
   private queuesObservable : Observable<any>;
-  private hasAttachedQueuesEvent : Boolean = false;
+  private hasAttachedQueuesEvent : boolean = false;
   private queues : Array<any>;
   private queueObservers : Array<Observer<any>> = [];
 
@@ -19,6 +19,20 @@ export class RealtimeService {
   private hasAttachedGroupsEvent : Object = {};
   private groups : Object = {};
   private groupObservers : Object = {};
+
+  private batchesObservables : Object = {};
+  private hasAttachedBatchesEvent : Object = {};
+  private batches : Object = {};
+  private batchObservers : Object = {};
+
+  private batchQueueGroupsObservables : Object =  {};
+  private hasAttachedBatchQueueGroupsEvent : Object = {};
+  private batchQueueGroups : Object = {};
+  private batchQueueGroupsObservers : Object = {};
+
+  private alertsObservable : Observable<any>;
+  private hasAttachedAlertsEvent : boolean = false;
+  private alertObservers : Array<Observer<any>> = [];
 
   private authenticated : boolean = false;
 
@@ -31,7 +45,9 @@ export class RealtimeService {
     }
     if (event.verb === "updated") {
       let index = _.findIndex(collection, item => item.id == event.id);
-      _.assign(collection[index], event.data);
+      let newData = _.cloneDeep(collection[index]);
+      _.assign(newData, event.data);
+      collection[index] = newData;
     }
     if (event.verb === "addedTo") {
       let index = _.findIndex(collection, item => item.id == event.id);
@@ -181,7 +197,7 @@ export class RealtimeService {
               this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
             });
           }
-        })
+        });
         this.hasAttachedGroupsEvent[queueId] = true;
       }
       this.doGet(`/queue/${queueId}/group`, (groups, jwr) => {
@@ -247,39 +263,151 @@ export class RealtimeService {
     })
   }
 
-  advanceQueue(queueId : string) : Observable<any> {
-    return new Observable(observer => {
-      this.doPost(`/queue/${queueId}/advance`, {
-        queueId,
-      }, (group, jwr) => {
-        this.ngZone.run(() => {
-          observer.next(group);
-        });
-      });
-    });
-  }
-
-  reverseQueue(queueId : string) : Observable<any> {
-    return new Observable(observer => {
-      this.doPost(`/queue/${queueId}/reverse`, {
-        queueId,
-      }, (group, jwr) => {
-        this.ngZone.run(() => {
-          observer.next(group);
-        });
-      });
-    });
-  }
-
-  nextGroup(queueId : string) : Observable<any> {
+  nextBatch(queueId : string) : Observable<any> {
     return new Observable(observer => {
       this.doPost(`/queue/${queueId}/next`, {
         queueId,
-      }, (group, jwr) => {
+      }, (batch, jwr) => {
         this.ngZone.run(() => {
-          observer.next(group);
+          observer.next(batch);
         });
       });
     });
+  }
+
+  getBatchesByQueue(queueId : string) : Observable<any> {
+    if (this.batchesObservables[queueId]) return this.batchesObservables[queueId];
+    this.batchesObservables[queueId] = new Observable(observer => {
+      if (! this.batchObservers[queueId]) this.batchObservers[queueId] = [];
+      if (! this.batches[queueId]) this.batches[queueId] = [];
+
+      this.batchObservers[queueId].push(observer);
+      if (! this.hasAttachedBatchesEvent[queueId]) {
+        this.io.socket.on("batch", event => {
+          if (event.data && event.data.queue != queueId) return;
+          this.ngZone.run(() => {
+            this.updateCollection(this.batches[queueId], event);
+            this.updateObservers(this.batchObservers[queueId], this.batches[queueId]);
+          });
+        });
+        this.hasAttachedBatchesEvent[queueId] = true;
+      }
+      this.doGet(`/queue/${queueId}/batch`, (batches, jwr) => {
+        this.ngZone.run(() => {
+          this.batches[queueId] = _.clone(batches);
+          this.updateObservers(this.batchObservers[queueId], this.batches[queueId]);
+        });
+      });
+    });
+    return this.batchesObservables[queueId];
+  }
+
+  getQueueGroupsForBatch(batchId : string) : Observable<any> {
+    if (this.batchQueueGroupsObservables[batchId]) return this.batchQueueGroupsObservables[batchId];
+    this.batchQueueGroupsObservables[batchId] = new Observable(observer => {
+      if (! this.batchQueueGroupsObservers[batchId]) this.batchQueueGroupsObservers[batchId] = [];
+      if (! this.batchQueueGroups[batchId]) this.batchQueueGroups[batchId] = [];
+
+      this.batchQueueGroupsObservers[batchId].push(observer);
+      if (! this.hasAttachedBatchQueueGroupsEvent[batchId]) {
+        this.io.socket.on("queuegroup", event => {
+          if (event.data && event.data.batch != batchId) return; // Ignore other batches
+          this.ngZone.run(() => {
+            this.updateCollection(this.batchQueueGroups[batchId], event);
+            this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+          });
+        });
+        this.io.socket.on("group", event => {
+          // Only interested in update events; others covered by queueGroup events
+          if (event.verb === "updated") {
+            this.ngZone.run(() => {
+              this.updateCollection(_.map(this.batchQueueGroups[batchId], "group"), event);
+              this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+            });
+          }
+        });
+        this.io.socket.on("batch", event => {
+          if (event.id != batchId) return; // Ignore other batches
+          if (event.verb === "addedTo") {
+            this.ngZone.run(() => {
+              this.batchQueueGroups[batchId].push(event.added);
+            });
+          }
+          if (event.verb === "removedFrom") {
+            this.ngZone.run(() => {
+              _.remove(this.batchQueueGroups[batchId], item => item.id == event.removedId);
+            });
+          }
+        });
+        this.hasAttachedBatchQueueGroupsEvent[batchId] = true;
+      }
+      this.doGet(`/batch/${batchId}/groups`, (batchQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          this.batchQueueGroups[batchId] = _.clone(batchQueueGroups);
+          this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
+        });
+      });
+    });
+    return this.batchQueueGroupsObservables[batchId];
+  }
+
+  addQueueGroupToBatch(batchId : string, queueGroupId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/groups`, {
+        queueGroupId,
+      }, (queueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queueGroup);
+        });
+      });
+    });
+  }
+
+  removeQueueGroupFromBatch(batchId : string, queueGroupId : string) {
+    return new Observable(observer => {
+      this.doDelete(`/batch/${batchId}/groups/${queueGroupId}`, (queueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(queueGroup);
+        });
+      });
+    });
+  }
+
+  autoPopulateBatch(batchId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/populate`, {}, (addedQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(addedQueueGroups);
+        });
+      });
+    });
+  }
+
+  alertBatch(batchId : string) {
+    return new Observable(observer => {
+      this.doPost(`/batch/${batchId}/alert`, {}, (createdAlert, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(createdAlert);
+        });
+      });
+    });
+  }
+
+  subscribeAlerts() {
+    if (this.alertsObservable) return this.alertsObservable;
+    this.alertsObservable = new Observable(observer => {
+      this.alertObservers.push(observer);
+      if (! this.hasAttachedAlertsEvent) {
+        this.io.socket.on("alert", event => {
+          this.ngZone.run(() => {
+            this.updateObservers(this.alertObservers, event.data);
+          });
+        });
+        this.hasAttachedAlertsEvent = true;
+      }
+      this.doGet("/alerts", (alerts, jwr) => {
+      });
+    });
+    return this.alertsObservable;
   }
 }
