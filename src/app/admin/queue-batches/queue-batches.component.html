@@ -23,6 +23,6 @@
     </ul>
     
     <button (click)="populate()">Populate</button>
-    <button (click)="alertBatch()">Alert</button>
+    <button (click)="alertBatch()" [disabled]="nextBatchGroups.length === 0">Alert</button>
   </div>
 </div>
