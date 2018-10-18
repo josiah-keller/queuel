@@ -51,7 +51,7 @@ import { RealtimeService } from '../../services/realtime.service';
 export class DisplayComponent implements OnInit, OnDestroy {
   queuesSubscription : Subscription;
   groupsSubscriptions : any = {};
-  batchSubscriptions : any = {};
+  batchSubscriptionInfo : any = {};
   queues : Array<any> = [];
   groups : any = {};
   batchGroups : any = {};
@@ -92,8 +92,8 @@ export class DisplayComponent implements OnInit, OnDestroy {
     _.forOwn(this.groupsSubscriptions, (subscription : Subscription) => {
       subscription.unsubscribe();
     });
-    _.forOwn(this.batchSubscriptions, (subscription : Subscription) => {
-      subscription.unsubscribe();
+    _.forOwn(this.batchSubscriptionInfo, (subscriptionInfo : any) => {
+      subscriptionInfo.subscription.unsubscribe();
     })
   }
 
@@ -109,18 +109,23 @@ export class DisplayComponent implements OnInit, OnDestroy {
   }
 
   subscribeToBatch(queue : any) {
-    this.batchSubscriptions[queue.id] = this.realtimeService.getQueueGroupsForBatch(queue.nextBatch.id)
-      .subscribe(queueGroups => {
-        this.batchGroups[queue.id] = queueGroups;
-      });
+    this.batchSubscriptionInfo[queue.id] = {
+      subscription: this.realtimeService.getQueueGroupsForBatch(queue.nextBatch.id)
+        .subscribe(queueGroups => {
+          this.batchGroups[queue.id] = queueGroups;
+        }),
+      batchId: queue.nextBatch.id,
+    };
     this.batchGroups[queue.id] = [];
   }
 
   updateBatchSubscriptions() {
     _.forEach(this.queues, queue => {
-      if (this.batchSubscriptions.hasOwnProperty(queue.id)) {
-        this.batchSubscriptions[queue.id].unsubscribe();
-        this.subscribeToBatch(queue);
+      if (this.batchSubscriptionInfo.hasOwnProperty(queue.id)) {
+        if (this.batchSubscriptionInfo[queue.id].batchId !== queue.nextBatch.id) {
+          this.batchSubscriptionInfo[queue.id].subscription.unsubscribe();
+          this.subscribeToBatch(queue);
+        }
       }
     });
   }
@@ -128,7 +133,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
   hideQueue(queue : any) {
     _.pull(this.shownQueues, queue);
     this.groupsSubscriptions[queue.id].unsubscribe();
-    this.batchSubscriptions[queue.id].unsubscribe();
+    this.batchSubscriptionInfo[queue.id].subscription.unsubscribe();
     this.hiddenQueues.push(queue);
   }
 
