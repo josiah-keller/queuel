@@ -263,6 +263,29 @@ export class RealtimeService {
     })
   }
 
+  getMovableQueueGroups(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.doGet(`/group/${group.id}/movableQueueGroups`, (movableQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(movableQueueGroups);
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  removeQueueGroup(queueGroup : any) : Observable<any> {
+    return new Observable(observer => {
+      let groupId = typeof queueGroup.group === "object" ? queueGroup.group.id : queueGroup.group;
+      this.doDelete(`/group/${groupId}/queueGroup/${queueGroup.id}`, (destroyedQueueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(destroyedQueueGroup);
+          observer.complete();
+        });
+      });
+    });
+  }
+
   nextBatch(queueId : string) : Observable<any> {
     return new Observable(observer => {
       this.doPost(`/queue/${queueId}/next`, {
