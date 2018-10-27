@@ -46,10 +46,34 @@
       </div>
     </ng-container>
     <ng-container *ngIf="! isNew">
-      <p>You can't change a group's events order after the fact.</p>
-      <p>Click "Delete Group" below to delete this group from <i>all</i> queues</p>
+      <p>You can add this group to the following queues:</p>
+      <div class="group-events-bank">
+        <span>Addable events:</span>
+        <div *ngFor="let queue of addableQueues" class="group-event">
+          {{ queue.name }}
+          <button (click)="addToQueue(queue)">
+            <app-icon name="icon_plus_alt2_white"></app-icon>
+          </button>
+        </div>
+        <div class="clear"></div>
+      </div>
+      
+      <p>You can remove this group from the following queues:</p>
+
+      <div class="group-events-selection">
+        <span>Removable events:</span>
+        <div *ngFor="let queueGroup of movableQueueGroups" class="group-event">
+          {{ queueGroup.queue.name }}
+          <button (click)="removeQueueGroup(queueGroup)">
+            <app-icon name="icon_minus_alt2_white"></app-icon>
+          </button>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+      <p>Click "Delete Group" below to remove this group from <i>all</i> queues</p>
       <app-delete-button (onConfirm)="delete()">Delete Group</app-delete-button>
-    </ng-container> 
+    </ng-container>
     <div class="buttons">
       <button class="primary" (click)="save()">{{ isNew ? "Create" : "Save"}}</button>
       <button (click)="cancel()">Cancel</button>

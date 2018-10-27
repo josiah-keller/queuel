@@ -183,7 +183,7 @@ export class RealtimeService {
       this.groupObservers[queueId].push(observer);
       if (! this.hasAttachedGroupsEvent[queueId]) {
         this.io.socket.on("queuegroup", event => {
-          if (event.data && event.data.queue != queueId) return; // Ignore other queues
+          if (event.data && event.data.queue != queueId && event.data.queue.id != queueId) return; // Ignore other queues
           this.ngZone.run(() => {
             this.updateCollection(this.groups[queueId], event);
             this.updateObservers(this.groupObservers[queueId], this.groups[queueId]);
@@ -261,6 +261,53 @@ export class RealtimeService {
         });
       });
     })
+  }
+
+  getMovableQueueGroups(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.doGet(`/group/${group.id}/movableQueueGroups`, (movableQueueGroups, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(movableQueueGroups);
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  removeQueueGroup(queueGroup : any) : Observable<any> {
+    return new Observable(observer => {
+      let groupId = typeof queueGroup.group === "object" ? queueGroup.group.id : queueGroup.group;
+      this.doDelete(`/group/${groupId}/queueGroup/${queueGroup.id}`, (destroyedQueueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(destroyedQueueGroup);
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  getAddableQueues(group : any) : Observable<any> {
+    return new Observable(observer => {
+      this.doGet(`/group/${group.id}/addableQueues`, (addableQueues, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(addableQueues);
+          observer.complete();
+        });
+      });
+    });
+  }
+  
+  addQueueGroup(groupId : string, queueId : string) : Observable<any> {
+    return new Observable(observer => {
+      this.doPost(`/group/${groupId}/queueGroup`, {
+        queue: queueId,
+      }, (newQueueGroup, jwr) => {
+        this.ngZone.run(() => {
+          observer.next(newQueueGroup);
+          observer.complete();
+        });
+      });
+    });
   }
 
   nextBatch(queueId : string) : Observable<any> {

@@ -15,14 +15,16 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   queues : Array<any> = null;
   queuesBank : Array<any> = [];
   selectedQueues : Array<any> = [];
-  subscription : Subscription;
+  queuesSubscription : Subscription;
   noSelectedQueues : boolean = false;
   newGroup : any = {};
+  movableQueueGroups : Array<any> = [];
+  addableQueues : Array<any> = [];
 
   constructor(private realtimeService : RealtimeService) { }
 
   ngOnInit() {
-    this.subscription = this.realtimeService.getQueues().subscribe(queues => {
+    this.queuesSubscription = this.realtimeService.getQueues().subscribe(queues => {
       this.queues = queues;
       this.queuesBank = _.reject(this.queues, queue => _.includes(this.selectedQueues, queue));
     });
@@ -34,10 +36,19 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.selectedQueues = [];
     this.newGroup = this.group ? _.clone(this.group) : {};
+
+    if (this.group) {
+      this.realtimeService.getMovableQueueGroups(this.group).subscribe(movableQueueGroups => {
+        this.movableQueueGroups = movableQueueGroups;
+      });
+      this.realtimeService.getAddableQueues(this.group).subscribe(addableQueues => {
+        this.addableQueues = addableQueues;
+      });
+    }
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.queuesSubscription.unsubscribe();
   }
 
   save() {
@@ -52,6 +63,19 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.realtimeService.updateGroup(this.newGroup).toPromise();
     }
     this.onFinish.emit(null);
+  }
+
+  removeQueueGroup(queueGroup : any) {
+    this.realtimeService.removeQueueGroup(queueGroup).subscribe(destroyedQueueGroup => {
+      _.pull(this.movableQueueGroups, queueGroup);
+    });
+  }
+
+  addToQueue(queue : any) {
+    this.realtimeService.addQueueGroup(this.group.id, queue.id).subscribe(newQueueGroup => {
+      this.movableQueueGroups.push(newQueueGroup);
+      _.pull(this.addableQueues, queue);
+    });
   }
 
   delete() {
