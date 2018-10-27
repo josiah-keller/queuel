@@ -46,6 +46,18 @@
       </div>
     </ng-container>
     <ng-container *ngIf="! isNew">
+      <p>You can add this group to the following queues:</p>
+      <div class="group-events-bank">
+        <span>Addable events:</span>
+        <div *ngFor="let queue of addableQueues" class="group-event">
+          {{ queue.name }}
+          <button (click)="addToQueue(queue)">
+            <app-icon name="icon_plus_alt2_white"></app-icon>
+          </button>
+        </div>
+        <div class="clear"></div>
+      </div>
+      
       <p>You can remove this group from the following queues:</p>
 
       <div class="group-events-selection">

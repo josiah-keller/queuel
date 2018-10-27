@@ -19,6 +19,7 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   noSelectedQueues : boolean = false;
   newGroup : any = {};
   movableQueueGroups : Array<any> = [];
+  addableQueues : Array<any> = [];
 
   constructor(private realtimeService : RealtimeService) { }
 
@@ -39,6 +40,9 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
     if (this.group) {
       this.realtimeService.getMovableQueueGroups(this.group).subscribe(movableQueueGroups => {
         this.movableQueueGroups = movableQueueGroups;
+      });
+      this.realtimeService.getAddableQueues(this.group).subscribe(addableQueues => {
+        this.addableQueues = addableQueues;
       });
     }
   }
@@ -64,6 +68,13 @@ export class GroupEditorComponent implements OnInit, OnChanges, OnDestroy {
   removeQueueGroup(queueGroup : any) {
     this.realtimeService.removeQueueGroup(queueGroup).subscribe(destroyedQueueGroup => {
       _.pull(this.movableQueueGroups, queueGroup);
+    });
+  }
+
+  addToQueue(queue : any) {
+    this.realtimeService.addQueueGroup(this.group.id, queue.id).subscribe(newQueueGroup => {
+      this.movableQueueGroups.push(newQueueGroup);
+      _.pull(this.addableQueues, queue);
     });
   }
 
