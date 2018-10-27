@@ -95,6 +95,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
     _.forOwn(this.batchSubscriptionInfo, (subscriptionInfo : any) => {
       subscriptionInfo.subscription.unsubscribe();
     })
+    this.alertsSubscription.unsubscribe();
   }
 
   showQueue(queue : any) {
