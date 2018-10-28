@@ -19,6 +19,10 @@
         </button>
         {{ queueGroup.group.name }}
         ({{ queueGroup.group.groupSize }})
+        <app-icon 
+          *ngIf="queueGroup.group.cantText"
+          name="icon_error-oct_alt"
+          title="Can't text this group anymore because they replied STOP"></app-icon>
       </li>
     </ul>
     

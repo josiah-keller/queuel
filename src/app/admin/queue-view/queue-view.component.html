@@ -35,6 +35,10 @@
             [sortableIndex]="i">
             {{ queueGroup.group.name + (queueGroup.pending ? " (pending)" : "") }},
             {{ queueGroup.group.groupSize | i18nPlural : peopleMapping }}
+            <app-icon
+              *ngIf="queueGroup.group.cantText"
+              name="icon_error-oct_alt"
+              title="Can't text this group anymore because they replied STOP"></app-icon>
 
             <div class="queue-groups-list-item-actions">
               <div class="sort-handle" dnd-sortable-handle title="Drag to reorder">
