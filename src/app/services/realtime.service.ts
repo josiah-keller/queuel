@@ -34,6 +34,9 @@ export class RealtimeService {
   private hasAttachedAlertsEvent : boolean = false;
   private alertObservers : Array<Observer<any>> = [];
 
+  private connectionStatusObservable : Observable<string>;
+  get connectionStatus() { return this.connectionStatusObservable };
+
   private authenticated : boolean = false;
 
   private updateCollection(collection : Array<any>, event : any) {
@@ -67,6 +70,15 @@ export class RealtimeService {
     this.apiUrl = environment.apiUrl;
     this.io = SailsIoClient(SocketIoClient);
     this.io.sails.url = this.apiUrl;
+
+    this.connectionStatusObservable = new Observable<string>(observer => {
+      this.io.socket.on("disconnect", () => {
+        observer.next("disconnected");
+      });
+      this.io.socket.on("connect", () => {
+        observer.next("connected");
+      });
+    });
   }
 
   private doGet(path : string, callback : Function) {
@@ -94,6 +106,10 @@ export class RealtimeService {
       }
       callback(body, jwr);
     });
+  }
+
+  get isConnected() : boolean {
+    return this.io.socket.isConnected();
   }
 
   isAuthenticated() : Observable<boolean> {

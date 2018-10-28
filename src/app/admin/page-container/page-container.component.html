@@ -1,4 +1,8 @@
 <app-topbar></app-topbar>
-<div id="page-container">
+<div class="page-container">
   <ng-content></ng-content>
+</div>
+<div class="connection-status" *ngIf="disconnected">
+  <h1>Lost connection</h1>
+  <button (click)="reconnect()">Reconnect</button>
 </div>
