@@ -162,6 +162,6 @@ export class DisplayComponent implements OnInit, OnDestroy {
       if (this.alertsBuffer.length > 0) {
         this.nextAlert();
       }
-    }, 5000);
+    }, 10000);
   }
 }
