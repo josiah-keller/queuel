@@ -388,7 +388,11 @@ export class RealtimeService {
           // Only interested in update events; others covered by queueGroup events
           if (event.verb === "updated") {
             this.ngZone.run(() => {
-              this.updateCollection(_.map(this.batchQueueGroups[batchId], "group"), event);
+              let groupCollection = this.batchQueueGroups[batchId].map(group => group.group);
+              this.updateCollection(groupCollection, event);
+              groupCollection.forEach((group, i) => {
+                this.batchQueueGroups[batchId][i].group = group;
+              });
               this.updateObservers(this.batchQueueGroupsObservers[batchId], this.batchQueueGroups[batchId]);
             });
           }
